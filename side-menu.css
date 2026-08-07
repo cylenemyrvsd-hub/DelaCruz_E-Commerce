@@ -20,10 +20,10 @@ body {
     box-shadow: 4px 0 10px rgba(79, 217, 11, 0.1);
 }
 
-/* Store Name */
+
 .store-name {
     font-family: 'Trebuchet MS', Arial, sans-serif;
-    font-size: 26px;
+    font-size: 23px;
     font-weight: bold;
     text-align: center;
     padding: 15px;
@@ -83,7 +83,7 @@ body {
 }
 
 .main-content h1 {
-    font-size: 32px;
+    font-size: 35px;
     color: #1b4332;
     margin-bottom: 10px;
 }
