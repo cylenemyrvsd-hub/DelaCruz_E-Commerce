@@ -80,6 +80,11 @@ body {
     flex-grow: 1;
     padding: 40px;
     color: #2d3748;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    
 }
 
 .main-content h1 {
