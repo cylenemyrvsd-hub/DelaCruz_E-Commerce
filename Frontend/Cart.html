@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYRVS - Cart</title>
+    <!-- Import Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #d4e5f5; 
+            position: relative;
+        }
+
+        /* ===== SIDEBAR STYLING & COLLAPSE TRANSITION ===== */
+        .sidebar {
+            width: 300px;
+            background-color: rgb(15, 143, 5); 
+            color: #d4e5f5;
+            padding: 20px 0;
+            box-shadow: 4px 0 10px rgba(79, 217, 11, 0.1);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            flex-shrink: 0;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            padding-left: 0;
+            padding-right: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        /* ===== TOGGLE BUTTON STYLING ===== */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: rgb(15, 143, 5);
+            color: #d4e5f5;
+            border: none;
+            padding: 10px 14px;
+            font-size: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background-color: #2d6a4f;
+        }
+
+        body:not(.sidebar-collapsed) .sidebar-toggle-btn {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* ===== STORE HEADER ===== */
+        .store-header {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+            padding: 10px 20px 20px 20px;
+            border-bottom: 1px solid rgba(23, 122, 6, 0.15);
+            margin-bottom: 15px;
+            white-space: nowrap;
+        }
+
+        .logo-img {
+            width: 120px; 
+            height: 120px;          
+            object-fit: cover;    
+            border-radius: 50%;
+        }
+
+        .store-name {
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            font-size: 40px;
+            font-weight: bold;
+            color: #e9f5ed;
+        }
+
+        /* ===== MENU GROUPS & ITEMS ===== */
+        .menu-group {
+            margin-bottom: 20px;
+            white-space: nowrap;
+        }
+
+        .group-title {
+            font-family: Georgia, serif;
+            font-size: 23px;
+            text-transform: uppercase;
+            color: #041a3a; 
+            padding: 10px 20px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            display: block;
+            color: #d8f3dc; 
+            text-decoration: none;
+            padding: 14px 20px;
+            font-size: 24px; 
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .menu-item:hover {
+            background-color: #2d6a4f; 
+            color: #ffffff;
+            padding-left: 25px; 
+        }
+
+        .menu-item.active {
+            background-color: #40916c; 
+            color: #ffffff;
+            font-weight: bold;
+            border-left: 5px solid #74c69d; 
+        }
+
+        .icon {
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        /* ===== MAIN CONTENT AREA ===== */
+        .cart-container {
+            max-width: 1300px;
+            width: 85%;
+            margin: 40px auto;
+            background: rgb(68, 246, 55);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #1a202c;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            font-size: 36px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 25px 0;
+        }
+
+        .btn-remove {
+            background-color: #e63946;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .btn-remove:hover {
+            background-color: #d90429;
+        }
+
+        .empty-cart {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+            padding: 40px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #155087;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-checkout {
+            background-color: #1d3557;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-checkout:hover {
+            background-color: #457b9d; 
+        }
+
+        /* Shipping Box Styles */
+        .shipping-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+        }
+
+        .shipping-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .shipping-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1d3557;
+        }
+
+        .btn-edit-shipping {
+            background-color: #1d3557;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-edit-shipping:hover {
+            background-color: #457b9d;
+        }
+
+        .shipping-form-group {
+            margin-bottom: 12px;
+        }
+
+        .shipping-form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            color: #475569;
+            margin-bottom: 4px;
+        }
+
+        .shipping-form-group input, .shipping-form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 15px;
+            border: 1px solid #94a3b8;
+            border-radius: 4px;
+            background: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .cart-container {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+   </style>
+</head>
+<body class="sidebar-collapsed">
+    <!-- Toggle Button for Collapsible Sidebar -->
+    <button id="sidebar-toggle" class="sidebar-toggle-btn">&#9776;</button>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar collapsed" id="sidebar">
+        <div class="store-header">
+            <img src="logo.jpg" alt="Store Logo" class="logo-img">
+            <span class="store-name">MYRVS</span>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">Main Navigation</div>
+            <a href="Home.html" class="menu-item"><span class="icon">🏠</span> Home</a>
+            <a href="Products.html" class="menu-item"><span class="icon">📦</span> Products</a>
+            <a href="Categories.html" class="menu-item"><span class="icon">📁</span> Categories</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">Shopping</div>
+            <a href="Cart.html" class="menu-item active"><span class="icon">🛒</span> Cart</a>
+            <a href="My Orders.html" class="menu-item"><span class="icon">📋</span> My Orders</a>
+            <a href="Wishlist.html" class="menu-item"><span class="icon">❤️</span> Wishlist</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">Account</div>
+            <a href="Profile.html" class="menu-item"><span class="icon">👤</span> Profile</a>
+            <a href="Setting.html" class="menu-item"><span class="icon">⚙️</span> Settings</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">System</div>
+            <a href="Logout.html" class="menu-item"><span class="icon">🚪</span> Logout</a>
+        </div>
+    </div>
+    
+    <!-- MAIN CONTENT AREA -->
+    <div class="cart-container">
+        <h2>🛒 Your Shopping Cart</h2>
+        
+        <div id="cart-items-list"></div>
+
+        <!-- SHIPPING INFORMATION & PAYMENT METHOD BOX -->
+        <div id="cart-footer" style="display: none;">
+            <div class="shipping-box">
+                <div class="shipping-header">
+                    <div class="shipping-title">📍 Shipping Information</div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div class="shipping-form-group">
+                        <label for="ship-name">Recipient Name:</label>
+                        <input type="text" id="ship-name" placeholder="Enter full name">
+                    </div>
+                    <div class="shipping-form-group">
+                        <label for="ship-address">Delivery Address:</label>
+                        <input type="text" id="ship-address" placeholder="Enter complete address">
+                    </div>
+                    <div class="shipping-form-group">
+                        <label for="ship-phone">Phone Number:</label>
+                        <input type="text" id="ship-phone" placeholder="Enter phone number">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                <div class="shipping-form-group" style="margin-bottom: 0;">
+                    <label for="dress-size-select">Standard Dress Size:</label>
+                    <select id="dress-size-select">
+                        <option value="Custom / Made-to-Measure">Custom (Use measurements below)</option>
+                        <option value="XS (Extra Small)">XS (Extra Small)</option>
+                        <option value="S (Small)">S (Small)</option>
+                        <option value="M (Medium)">M (Medium)</option>
+                        <option value="L (Large)">L (Large)</option>
+                        <option value="XL (Extra Large)">XL (Extra Large)</option>
+                        <option value="XXL (2XL)">XXL (2XL)</option>
+                    </select>
+                </div>
+                <div class="shipping-form-group" style="margin-bottom: 0;">
+                        <label for="measure-length">Length (inches):</label>
+                        <input type="text" id="measure-length" placeholder="e.g., 38">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="shipping-form-group" style="margin-bottom: 0;">
+                        <label for="measure-waist">Waist (inches):</label>
+                        <input type="text" id="measure-waist" placeholder="e.g., 28">
+                    </div>
+                    <div class="shipping-form-group" style="margin-bottom: 0;">
+                        <label for="measure-bust">Bust Size (inches):</label>
+                        <input type="text" id="measure-bust" placeholder="e.g., 34">
+                    </div>
+                </div>
+
+                    <div class="shipping-form-group">
+                        <label for="custom-notes">Additional Customization Notes / Style Requests:</label>
+                        <textarea id="custom-notes" rows="2" placeholder="Any extra details (e.g., preferred fabric color, loose fit, specific adjustments)..." style="width: 100%; padding: 8px 12px; font-size: 15px; border: 1px solid #94a3b8; border-radius: 4px; background: #fff; resize: vertical;"></textarea>
+                    </div>
+
+        
+                    <div class="shipping-form-group">
+                        <label for="payment-method-select">Payment Method:</label>
+                        <select id="payment-method-select">
+                            <option value="Cash on Delivery">Cash on Delivery</option>
+                            <option value="GCash">GCash</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Credit / Debit Card">Credit / Debit Card</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHECKOUT SUMMARY AREA -->
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e2e8f0; display: flex; justify-content: flex-end; align-items: flex-end;">
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+                    <div id="selected-count" style="font-size: 16px; font-weight: bold; color: #475569;">Quantity (0 items)</div>
+                    <div id="selected-total" style="font-size: 24px; font-weight: bold; color: #081429;">Selected Total: ₱0.00</div>
+                    <button id="checkout-btn" class="btn-checkout">Checkout</button>
+                </div>
+            </div>
+        </div>
+
+        <a href="Products.html" class="back-link">&#8592; Continue Shopping</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                sidebar.classList.toggle('collapsed');
+                body.classList.toggle('sidebar-collapsed');
+            });
+
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                const isClickInsideSidebar = sidebar.contains(e.target);
+                const isClickOnToggle = toggleBtn.contains(e.target);
+
+                if (!body.classList.contains('sidebar-collapsed') && !isClickInsideSidebar && !isClickOnToggle) {
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                }
+            });
+
+            // ===== CART DISPLAY & MANAGEMENT LOGIC =====
+            const cartList = document.getElementById('cart-items-list');
+
+            window.renderCart = function() {
+                let cart = JSON.parse(localStorage.getItem('myrvs_cart')) || [];
+
+                if (cart.length === 0) {
+                    cartList.innerHTML = '<div class="empty-cart">Your cart is currently empty.</div>';
+                    const footer = document.getElementById('cart-footer');
+                    if (footer) footer.style.display = 'none';
+                    return;
+                }
+
+                cartList.innerHTML = '';
+                
+                cart.forEach((item, index) => {
+                    let qty = item.quantity || 1; 
+
+                    const cartItem = document.createElement('div');
+                    cartItem.classList.add('cart-item');
+                    
+                    cartItem.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 20px; flex-grow: 1;">
+                            <input type="checkbox" class="item-checkbox" data-index="${index}" ${item.selected ? 'checked' : ''} style="width: 24px; height: 24px; cursor: pointer;">
+                            <img src="${item.image}" alt="${item.title}" style="width: 140px; height: 140px; object-fit: contain; background: #e2e8f0; border-radius: 6px;">
+                            <div style="flex-grow: 1;">
+                                <div style="font-size: 24px; font-weight: bold; color: #081429; margin-bottom: 5px;">${item.title}</div>
+                                <div style="font-size: 16px; color: #555; margin-bottom: 8px;">${item.description || ''}</div>
+                                <div style="font-size: 22px; color: #173f64; font-weight: bold; margin-bottom: 10px;">${item.price}</div>
+                                
+                                <!-- Quantity Controls (+ / -) -->
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 15px; font-weight: bold; color: #475569;">Qty:</span>
+                                    <button onclick="changeQuantity(${index}, -1)" style="width: 30px; height: 30px; background: #d1d5db; border: none; border-radius: 4px; font-size: 18px; font-weight: bold; cursor: pointer;">-</button>
+                                    <span style="font-size: 18px; font-weight: bold; min-width: 25px; text-align: center;">${qty}</span>
+                                    <button onclick="changeQuantity(${index}, 1)" style="width: 30px; height: 30px; background: #d1d5db; border: none; border-radius: 4px; font-size: 18px; font-weight: bold; cursor: pointer;">+</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <button class="btn-remove" data-index="${index}">Remove</button>
+                    `;
+                    cartList.appendChild(cartItem);
+                });
+
+                document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+                    checkbox.addEventListener('change', (e) => {
+                        const idx = e.target.getAttribute('data-index');
+                        cart[idx].selected = e.target.checked;
+                        localStorage.setItem('myrvs_cart', JSON.stringify(cart));
+                        updateSelectedTotal();
+                    });
+                });
+
+                document.querySelectorAll('.btn-remove').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const index = e.target.getAttribute('data-index');
+                        cart.splice(index, 1);
+                        localStorage.setItem('myrvs_cart', JSON.stringify(cart));
+                        renderCart(); 
+                    });
+                });
+
+                updateSelectedTotal();
+            }
+
+            window.changeQuantity = function(index, change) {
+                let cart = JSON.parse(localStorage.getItem('myrvs_cart')) || [];
+                
+                if (cart[index]) {
+                    if (!cart[index].quantity) {
+                        cart[index].quantity = 1;
+                    }
+
+                    cart[index].quantity += change;
+
+                    if (cart[index].quantity < 1) {
+                        cart[index].quantity = 1;
+                    }
+
+                    localStorage.setItem('myrvs_cart', JSON.stringify(cart));
+                    renderCart();
+                }
+            }
+
+            function updateSelectedTotal() {
+                let cart = JSON.parse(localStorage.getItem('myrvs_cart')) || [];
+                let total = 0;
+                let selectedCount = 0;
+
+                document.querySelectorAll('.item-checkbox:checked').forEach(checkbox => {
+                    const index = checkbox.getAttribute('data-index');
+                    const item = cart[index];
+                    if (item && item.price) {
+                        const numericPrice = parseFloat(item.price.replace(/[^0-9.-]+/g,"")) || 0;
+                        const qty = item.quantity || 1;
+                        total += (numericPrice * qty);
+                        selectedCount += qty;
+                    }
+                });
+
+                const countEl = document.getElementById('selected-count');
+                const totalEl = document.getElementById('selected-total');
+                const footerEl = document.getElementById('cart-footer');
+                
+                if (countEl) countEl.textContent = `Quantity (${selectedCount} items)`;
+                if (totalEl) totalEl.textContent = `Selected Total: ₱${total.toFixed(2)}`;
+                if (footerEl) footerEl.style.display = cart.length > 0 ? 'block' : 'none';
+            }
+
+            const checkoutBtn = document.getElementById('checkout-btn');
+            if (checkoutBtn) {
+                checkoutBtn.addEventListener('click', () => {
+                    const selectedCheckboxes = document.querySelectorAll('.item-checkbox:checked');
+                    if (selectedCheckboxes.length === 0) {
+                        alert('Please select at least one item to checkout.');
+                        return;
+                    }
+
+                    let cart = JSON.parse(localStorage.getItem('myrvs_cart')) || [];
+                    let selectedItems = [];
+
+                    selectedCheckboxes.forEach(cb => {
+                        selectedItems.push(cart[cb.getAttribute('data-index')]);
+                    });
+
+                    let totalAmount = 0;
+                    selectedItems.forEach(item => {
+                        const numericPrice = parseFloat(item.price.replace(/[^0-9.-]+/g,"")) || 0;
+                        const qty = item.quantity || 1;
+                        totalAmount += (numericPrice * qty);
+                    });
+
+                    // Grab shipping details & payment method entered by user
+                    const savedProfile = JSON.parse(localStorage.getItem('myrvs_profile')) || {};
+
+                    const nameVal = document.getElementById('ship-name').value;
+                    const addressVal = document.getElementById('ship-address').value;;
+                    const phoneVal = document.getElementById('ship-phone').value;
+                    const paymentVal = document.getElementById('payment-method-select').value;
+
+                    let newOrder = {
+                        orderId: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+                        checkoutDate: new Date().toLocaleString(),
+                        shippingInfo: {
+                            name: nameVal,
+                            address: addressVal,
+                            phone: phoneVal,
+                            paymentMethod: paymentVal
+                        },
+                        items: selectedItems,
+                        total: `₱${totalAmount.toFixed(2)}`,
+                        status: 'Processing'
+                    };
+
+                    let allOrders = JSON.parse(localStorage.getItem('myrvs_orders')) || [];
+                    allOrders.unshift(newOrder); 
+                    localStorage.setItem('myrvs_orders', JSON.stringify(allOrders));
+
+                    window.location.href = 'My Orders.html';
+                });
+            }
+
+            renderCart();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYRVS - My Orders</title>
+    <!-- Import Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #d4e5f5; 
+            position: relative;
+        }
+
+        /* ===== SIDEBAR STYLING & COLLAPSE TRANSITION ===== */
+        .sidebar {
+            width: 300px;
+            background-color: rgb(15, 143, 5); 
+            color: #d4e5f5;
+            padding: 20px 0;
+            box-shadow: 4px 0 10px rgba(79, 217, 11, 0.1);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            flex-shrink: 0;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            padding-left: 0;
+            padding-right: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        /* ===== TOGGLE BUTTON STYLING ===== */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: rgb(15, 143, 5);
+            color: #d4e5f5;
+            border: none;
+            padding: 10px 14px;
+            font-size: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background-color: #2d6a4f;
+        }
+
+        body:not(.sidebar-collapsed) .sidebar-toggle-btn {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* ===== STORE HEADER ===== */
+        .store-header {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+            padding: 10px 20px 20px 20px;
+            border-bottom: 1px solid rgba(23, 122, 6, 0.15);
+            margin-bottom: 15px;
+            white-space: nowrap;
+        }
+
+        .logo-img {
+            width: 120px; 
+            height: 120px;          
+            object-fit: cover;    
+            border-radius: 50%;
+        }
+
+        .store-name {
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            font-size: 40px;
+            font-weight: bold;
+            color: #e9f5ed;
+        }
+
+        /* ===== MENU GROUPS & ITEMS ===== */
+        .menu-group {
+            margin-bottom: 20px;
+            white-space: nowrap;
+        }
+
+        .group-title {
+            font-family: Georgia, serif;
+            font-size: 23px;
+            text-transform: uppercase;
+            color: #041a3a; 
+            padding: 10px 20px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            display: block;
+            color: #d8f3dc; 
+            text-decoration: none;
+            padding: 14px 20px;
+            font-size: 24px; 
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .menu-item:hover {
+            background-color: #2d6a4f; 
+            color: #ffffff;
+            padding-left: 25px; 
+        }
+
+        .menu-item.active {
+            background-color: #40916c; 
+            color: #ffffff;
+            font-weight: bold;
+            border-left: 5px solid #74c69d; 
+        }
+
+        .icon {
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        /* ===== MAIN CONTENT AREA ===== */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #1a202c;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #cbd5e1;
+            padding-bottom: 10px;
+            font-size: 36px;
+        }
+
+        /* ===== ORDER HISTORY STYLES ===== */
+        .order-card {
+            background: rgb(104, 242, 94); 
+            border-radius: 10px; 
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1); 
+            padding: 30px; 
+            margin-bottom: 30px;
+        }
+
+        .order-header-row {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 2px solid #cbd5e1; 
+            padding-bottom: 15px; 
+            margin-bottom: 20px;
+        }
+
+        .order-id {
+            font-size: 22px; 
+            font-weight: bold; 
+            color: #1d3557; 
+            margin-bottom: 3px;
+        }
+
+        .order-date {
+            font-size: 15px; 
+            color: #64748b;
+        }
+
+        .status-badge {
+            padding: 8px 20px; 
+            border-radius: 25px; 
+            font-size: 16px; 
+            font-weight: bold;
+        }
+
+        .status-processing {
+            background-color: #fef3c7; 
+            color: #d97706;
+        }
+
+        .status-shipping {
+            background-color: #e0f2fe; 
+            color: #0369a1;
+        }
+
+        .status-delivered {
+            background-color: #dcfce7; 
+            color: #15803d;
+        }
+
+        .order-section-box {
+            background: #f8fafc; 
+            padding: 20px; 
+            border-radius: 8px; 
+            border: 1px solid #cbd5e1; 
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .order-section-title {
+            font-weight: bold; 
+            color: #1d3557; 
+            margin-bottom: 10px; 
+            font-size: 24px;
+        }
+
+        /* ===== GUARANTEED FONT SIZE FIX FOR SHIPPING & PAYMENT ===== */
+        .order-card .order-section-box .order-info-content div {
+            font-size: 28px !important; /* Change this number (e.g., 26px, 28px, 32px) to resize the text */
+            color: #334155;
+            margin-bottom: 4px;
+        }
+
+        .order-item-row {
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
+            padding: 16px 0; 
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .order-item-row:last-child {
+            border-bottom: none;
+        }
+
+        .order-item-img {
+            width: 150px; 
+            height: 150px; 
+            object-fit: contain; 
+            background: #f8fafc; 
+            border-radius: 6px; 
+            border: 1px solid #cbd5e1;
+        }
+
+        .order-item-title {
+            font-size: 18px; 
+            font-weight: bold; 
+            color: #081429; 
+            margin-bottom: 4px;
+        }
+
+        .order-item-qty {
+            font-size: 16px; 
+            color: #475569;
+        }
+
+        .order-item-price {
+            font-size: 18px; 
+            font-weight: bold; 
+            color: #173f64;
+        }
+
+        .order-footer-row {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding-top: 15px; 
+            border-top: 2px solid #cbd5e1;
+        }
+
+        .order-total-items {
+            font-size: 16px; 
+            color: #475569;
+        }
+
+        .order-total-amount {
+            font-size: 22px; 
+            font-weight: bold; 
+            color: #081429;
+        }
+
+        .empty-orders-msg {
+            text-align: center; 
+            color: #475569; 
+            font-size: 20px; 
+            margin-top: 50px; 
+            background: white; 
+            padding: 50px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #155087;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body class="sidebar-collapsed">
+    <!-- Toggle Button for Collapsible Sidebar -->
+    <button id="sidebar-toggle" class="sidebar-toggle-btn">&#9776;</button>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar collapsed" id="sidebar">
+        <div class="store-header">
+            <img src="logo.jpg" alt="Store Logo" class="logo-img">
+            <span class="store-name">MYRVS</span>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">Main Navigation</div>
+            <a href="Home.html" class="menu-item"><span class="icon">🏠</span> Home</a>
+            <a href="Products.html" class="menu-item"><span class="icon">📦</span> Products</a>
+            <a href="Categories.html" class="menu-item"><span class="icon">📁</span> Categories</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">Shopping</div>
+            <a href="Cart.html" class="menu-item"><span class="icon">🛒</span> Cart</a>
+            <a href="My Orders.html" class="menu-item active"><span class="icon">📋</span> My Orders</a>
+            <a href="Wishlist.html" class="menu-item"><span class="icon">❤️</span> Wishlist</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">Account</div>
+            <a href="Profile.html" class="menu-item"><span class="icon">👤</span> Profile</a>
+            <a href="Setting.html" class="menu-item"><span class="icon">⚙️</span> Settings</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">System</div>
+            <a href="Logout.html" class="menu-item"><span class="icon">🚪</span> Logout</a>
+        </div>
+    </div>
+    
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-content">
+        <h2>Order History</h2>
+        
+        <!-- Container where order history cards will display -->
+        <div id="orders-container"></div>
+
+        <a href="Products.html" class="back-link">&#8592; Continue Shopping</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+
+            // Sidebar toggle behavior
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                sidebar.classList.toggle('collapsed');
+                body.classList.toggle('sidebar-collapsed');
+            });
+
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                const isClickInsideSidebar = sidebar.contains(e.target);
+                const isClickOnToggle = toggleBtn.contains(e.target);
+
+                if (!body.classList.contains('sidebar-collapsed') && !isClickInsideSidebar && !isClickOnToggle) {
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                }
+            });
+
+            // ===== LOAD AND DISPLAY ORDER HISTORY =====
+            const ordersContainer = document.getElementById('orders-container');
+            const allOrders = JSON.parse(localStorage.getItem('myrvs_orders')) || [];
+
+            if (allOrders.length === 0) {
+                ordersContainer.innerHTML = '<div class="empty-orders-msg">You have not placed any orders yet.</div>';
+                return;
+            }
+
+            ordersContainer.innerHTML = '';
+
+            allOrders.forEach(order => {
+                const orderCard = document.createElement('div');
+                orderCard.className = 'order-card';
+
+                // Status Badge CSS Class mapping
+                let statusClass = 'status-processing'; 
+                if (order.status === 'To Ship') {
+                    statusClass = 'status-shipping'; 
+                } else if (order.status === 'To Delivered') {
+                    statusClass = 'status-delivered'; 
+                }
+
+                // Build item list HTML for this order
+                let itemsHtml = '';
+                order.items.forEach(item => {
+                    const qty = item.quantity || 1;
+                    itemsHtml += `
+                        <div class="order-item-row">
+                            <img src="${item.image}" alt="${item.title}" class="order-item-img">
+                            <div style="flex-grow: 1;">
+                                <div class="order-item-title">${item.title}</div>
+                                <div class="order-item-qty">Quantity: <strong>${qty}</strong></div>
+                            </div>
+                            <div class="order-item-price">${item.price}</div>
+                        </div>
+                    `;
+                });
+
+                const checkoutDateStr = order.checkoutDate || order.date || 'N/A';
+                const paymentMethodStr = (order.shippingInfo && order.shippingInfo.paymentMethod) ? order.shippingInfo.paymentMethod : 'Cash on Delivery';
+                const shipping = order.shippingInfo || { name: 'Valued Customer', address: 'Default Address', phone: '09123456789' };
+
+                orderCard.innerHTML = `
+                    <div class="order-header-row">
+                        <div>
+                            <div class="order-id">${order.orderId}</div>
+                            <div class="order-date">Checkout Date: ${checkoutDateStr}</div>
+                        </div>
+                        <div class="status-badge ${statusClass}">
+                            ${order.status}
+                        </div>
+                    </div>
+                    
+                    <!-- Shipping & Payment Information Box -->
+                    <div class="order-section-box">
+                        <div class="order-section-title">📍 Shipping & Payment Information</div>
+                        <div class="order-info-content">
+                            <div><strong>Recipient:</strong> ${shipping.name}</div>
+                            <div><strong>Address:</strong> ${shipping.address}</div>
+                            <div><strong>Phone:</strong> ${shipping.phone}</div>
+                            <div><strong>Payment Method:</strong> ${paymentMethodStr}</div>
+                        </div>
+                    </div>
+
+                    <!-- Ordered Items Box -->
+                    <div class="order-section-box">
+                        <div class="order-section-title">📦 Ordered Items</div>
+                        ${itemsHtml}
+                    </div>
+
+                    <div class="order-footer-row">
+                        <div class="order-total-items">Total Items: <strong>${order.items.reduce((sum, i) => sum + (i.quantity || 1), 0)}</strong></div>
+                        <div class="order-total-amount">Total Amount: ${order.total}</div>
+                    </div>
+                `;
+
+                ordersContainer.appendChild(orderCard);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYRVS - Products</title>
+    <!-- Import Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color:#d4e5f5; 
+            position: relative;
+        }
+
+        /* ===== SIDEBAR STYLING & COLLAPSE TRANSITION ===== */
+        .sidebar {
+            width: 300px;
+            background-color: rgb(15, 143, 5); 
+            color: #d4e5f5;
+            padding: 20px 0;
+            box-shadow: 4px 0 10px rgba(79, 217, 11, 0.1);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            flex-shrink: 0;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            padding-left: 0;
+            padding-right: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        /* ===== TOGGLE BUTTON STYLING ===== */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: rgb(15, 143, 5);
+            color: #d4e5f5;
+            border: none;
+            padding: 10px 14px;
+            font-size: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, opacity 0.3s ease, visibility 0.3s ease;
+            
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background-color: #2d6a4f;
+        }
+
+        /* Hides button completely when the sidebar is open */
+        body:not(.sidebar-collapsed) .sidebar-toggle-btn {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* ===== STORE HEADER ===== */
+        .store-header {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+            padding: 10px 20px 20px 20px;
+            border-bottom: 1px solid rgba(23, 122, 6, 0.15);
+            margin-bottom: 15px;
+            white-space: nowrap;
+        }
+
+        .logo-img {
+            width: 120px; 
+            height: 120px;          
+            object-fit: cover;    
+            border-radius: 50%;
+        }
+
+        .store-name {
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            font-size: 40px;
+            font-weight: bold;
+            color: #e9f5ed;
+        }
+
+        /* ===== MENU GROUPS & ITEMS ===== */
+        .menu-group {
+            margin-bottom: 20px;
+            white-space: nowrap;
+        }
+
+        .group-title {
+            font-family: Georgia, serif;
+            font-size: 23px;
+            text-transform: uppercase;
+            color: #041a3a; 
+            padding: 10px 20px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            display: block;
+            color: #d8f3dc; 
+            text-decoration: none;
+            padding: 14px 20px;
+            font-size: 24px; 
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .menu-item:hover {
+            background-color: #2d6a4f; 
+            color: #ffffff;
+            padding-left: 25px; 
+        }
+
+        .menu-item.active {
+            background-color: #40916c; 
+            color: #ffffff;
+            font-weight: bold;
+            border-left: 5px solid #74c69d; 
+        }
+
+        /* ===== EMOJI ICON SPACING ===== */
+        .icon {
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        /* ===== MAIN CONTENT AREA of the PRODUCT PAGE ===== */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #d4e5f5;
+            margin: 0;
+            padding: 16px;
+        }
+        .main-content {
+            margin: 0 auto;
+            padding: 20px 40px;
+            box-sizing: border-box;
+            width: calc(100% - 260px);
+        }
+        .catalog-title {
+            font-size: 38px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* 3x3 Grid Layout */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            width: 100%;
+            max-width: 1400px;
+            box-sizing: border-box;  
+        }
+
+        /* Product Card */
+        .product-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-img {
+            aspect-ratio: 4 / 3;
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            background-color: #e2e8f0; 
+            transition: transform 0.3s ease;
+        }
+        .product-card:hover .product-img {
+            transform: scale(1.10);
+        }
+
+        .product-info {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            background-color: #77ea50 ;
+            text-align: center;
+        }
+
+        .product-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+            color: #081429;
+        }
+
+        .product-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #173f64;
+            margin: 0 0 16px 0;
+            text-align: center;
+        }
+
+        .btn-add {
+            width: 100%;
+            padding: 10px;
+            background-color: #155087;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: auto;
+        }
+
+        .btn-add:hover {
+            background-color: #3b83d0;
+        }
+
+        /* Wishlist Button Styling */
+        .btn-wishlist {
+            width: 100%;
+            padding: 10px;
+            background-color: #ee626d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 8px;
+        }
+
+        .btn-wishlist:hover {
+            background-color: #d90429;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-grid {
+                grid-template-columns: 1fr; /* 1 column on mobile phones */
+            }
+        }
+    </style>
+</head>
+<body class="sidebar-collapsed">
+    <!-- Toggle Button for Collapsible Sidebar -->
+    <button id="sidebar-toggle" class="sidebar-toggle-btn">&#9776;</button>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar collapsed" id="sidebar">
+        <div class="store-header">
+            <img src="logo.jpg" alt="Store Logo" class="logo-img">
+            <span class="store-name">MYRVS</span>
+        </div>
+        
+        <!-- Main Navigation Group -->
+        <div class="menu-group">
+            <div class="group-title">Main Navigation</div>
+            <a href="Home.html" class="menu-item"><span class="icon">🏠</span> Home</a>
+            <a href="Products.html" class="menu-item active"><span class="icon">📦</span> Products</a>
+            <a href="Categories.html" class="menu-item"><span class="icon">📁</span> Categories</a>
+        </div>
+        
+        <!-- Shopping Group -->
+        <div class="menu-group">
+            <div class="group-title">Shopping</div>
+            <a href="Cart.html" class="menu-item"><span class="icon">🛒</span> Cart</a>
+            <a href="My Orders.html" class="menu-item"><span class="icon">📋</span> My Orders</a>
+            <a href="Wishlist.html" class="menu-item"><span class="icon">❤️</span> Wishlist</a>
+        </div>
+        
+        <!-- Account Group -->
+        <div class="menu-group">
+            <div class="group-title">Account</div>
+            <a href="Profile.html" class="menu-item"><span class="icon">👤</span> Profile</a>
+            <a href="Setting.html" class="menu-item"><span class="icon">⚙️</span> Settings</a>
+        </div>
+        
+        <!-- System Group -->
+        <div class="menu-group">
+            <div class="group-title">System</div>
+            <a href="Logout.html" class="menu-item"><span class="icon">🚪</span> Logout</a>
+        </div>
+    </div>
+    
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-content">
+        <h2 class="catalog-title">Products</h2>
+
+        <div class="product-grid">
+            <!-- Item 1 -->
+            <div class="product-card">
+                <img src="Maribelle.Sunday.jpg" alt="Graphics Card" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">MARIBELLE</h3>
+                    <p class="product-price">₱1,200.00</p>
+                    <button class="btn-add">&#128722; Add to Cart</button>
+                    <button class="btn-wishlist">❤️ Add to Wishlist</button>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="product-card">
+                <img src="Rosalind.Sunday.jpg" alt="RAM Stick" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">ROSALIND</h3>
+                    <p class="product-price">₱1,800.00</p>
+                    <button class="btn-add"> &#128722;Add to Cart</button>
+                    <button class="btn-wishlist">❤️ Add to Wishlist</button>
+                </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="product-card">
+                <img src="Violetta.Sunday.jpg" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">VIOLLETTA</h3>
+                    <p class="product-price">₱1,100.00</p>
+                    <button class="btn-add">&#128722; Add to Cart</button>
+                    <button class="btn-wishlist">❤️ Add to Wishlist</button>
+                </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="product-card">
+                <img src="Ivy.Casual.jpg" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">IVY</h3>
+                    <p class="product-price">₱850.00</p>
+                    <button class="btn-add">&#128722; Add to Cart</button>
+                    <button class="btn-wishlist">❤️ Add to Wishlist</button>
+                </div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="product-card">
+                <img src="Elara.Casual.jpg" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">ELARA</h3>
+                    <p class="product-price">₱950.00</p>
+                    <button class="btn-add">&#128722; Add to Cart</button>
+                    <button class="btn-wishlist">❤️ Add to Wishlist</button>
+                </div>
+            </div>
+
+            <!-- Item 6 -->
+            <div class="product-card">
+                <img src="Liora.Casual.jpg" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">LIORA</h3>
+                    <p class="product-price">₱860.00</p>
+                    <button class="btn-add">&#128722;    Add to Cart</button>
+                    <button class="btn-wishlist">❤️ Add to Wishlist</button>
+                </div>
+            </div>
+
+            <!-- Item 7 -->
+            <div class="product-card">
+                <img src="Elowen.Sunday.jpg" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">ELOWEN</h3>
+                    <p class="product-price">₱1,250.00</p>
+                    <button class="btn-add">&#128722; Add to Cart</button>
+                    <button class="btn-wishlist">❤️ Add to Wishlist</button>
+                </div>
+            </div>
+
+            <!-- Item 8 -->
+            <div class="product-card">
+                <img src="Daisy.Gown.jpg" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">DAISY</h3>
+                    <p class="product-price">₱1,800.00</p>
+                    <button class="btn-add">&#128722; Add to Cart</button>
+                    <button class="btn-wishlist">❤️ Add to Wishlist</button>
+                </div>
+            </div>
+
+            <!-- Item 9 -->
+            <div class="product-card">
+                <img src="Adrielle.Gown.jpg"  class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">ADRIELLE</h3>
+                    <p class="product-price">₱2,350.00</p>
+                    <button class="btn-add">&#128722; Add to Cart</button>
+                    <button class="btn-wishlist">❤️ Add to Wishlist</button>
+                </div>
+            </div>
+        </div>  
+    </div>
+
+    <!-- JavaScript block -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+
+            // Toggle sidebar collapse/expand via button
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                sidebar.classList.toggle('collapsed');
+                body.classList.toggle('sidebar-collapsed');
+            });
+
+            // Handle active class switching when clicking any menu item
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                });
+            });
+
+            // Collapse sidebar when clicking outside
+            document.addEventListener('click', (e) => {
+                const isClickInsideSidebar = sidebar.contains(e.target);
+                const isClickOnToggle = toggleBtn.contains(e.target);
+
+                if (!body.classList.contains('sidebar-collapsed') && !isClickInsideSidebar && !isClickOnToggle) {
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                }
+            });
+
+            // ===== ADD TO CART FUNCTIONALITY =====
+            const addToCartButtons = document.querySelectorAll('.btn-add');
+
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productCard = e.target.closest('.product-card');
+                    
+                    // Extract product information
+                    const imgSrc = productCard.querySelector('.product-img').getAttribute('src');
+                    const title = productCard.querySelector('.product-title').innerText;
+                    const price = productCard.querySelector('.product-price').innerText;
+
+                    const product = {
+                        image: imgSrc,
+                        title: title,
+                        price: price
+                    };
+
+                    // Get existing cart items from localStorage or create an empty array
+                    let cart = JSON.parse(localStorage.getItem('myrvs_cart')) || [];
+
+                    // Add the new product to the cart array
+                    cart.push(product);
+
+                    // Save back to localStorage
+                    localStorage.setItem('myrvs_cart', JSON.stringify(cart));
+
+                    // Alert the user that it was added successfully
+                    alert(`${title} has been added to your cart!`);
+                });
+            });
+
+            // ===== ADD TO WISHLIST FUNCTIONALITY =====
+            const addToWishlistButtons = document.querySelectorAll('.btn-wishlist');
+
+            addToWishlistButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productCard = e.target.closest('.product-card');
+                    
+                    // Extract product information
+                    const imgSrc = productCard.querySelector('.product-img').getAttribute('src');
+                    const title = productCard.querySelector('.product-title').innerText;
+                    const price = productCard.querySelector('.product-price').innerText;
+
+                    const product = {
+                        image: imgSrc,
+                        title: title,
+                        price: price
+                    };
+
+                    // Get existing wishlist items from localStorage or create an empty array
+                    let wishlist = JSON.parse(localStorage.getItem('myrvs_wishlist')) || [];
+
+                    // Check if already in wishlist to avoid duplicates
+                    const existingIndex = wishlist.findIndex(item => item.title === title);
+                    if (existingIndex > -1) {
+                        alert(`${title} is already in your wishlist!`);
+                        return;
+                    }
+
+                    // Add the new product to the wishlist array
+                    wishlist.push(product);
+
+                    // Save back to localStorage
+                    localStorage.setItem('myrvs_wishlist', JSON.stringify(wishlist));
+
+                    // Alert the user that it was added successfully
+                    alert(`${title} has been added to your Wishlist! ❤️`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

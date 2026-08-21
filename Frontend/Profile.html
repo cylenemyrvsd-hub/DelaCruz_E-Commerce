@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYRVS - Profile</title>
+    <!-- Import Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #d4e5f5; 
+            position: relative;
+        }
+
+        /* ===== SIDEBAR STYLING & COLLAPSE TRANSITION ===== */
+        .sidebar {
+           width: 300px;
+            background-color: rgb(15, 143, 5); 
+            color: #d4e5f5;
+            padding: 20px 0;
+            box-shadow: 4px 0 10px rgba(79, 217, 11, 0.1);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            flex-shrink: 0;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            padding-left: 0;
+            padding-right: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        /* ===== TOGGLE BUTTON STYLING ===== */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: rgb(15, 143, 5);
+            color: #d4e5f5;
+            border: none;
+            padding: 10px 14px;
+            font-size: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background-color: #2d6a4f;
+        }
+
+        body:not(.sidebar-collapsed) .sidebar-toggle-btn {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* ===== STORE HEADER ===== */
+        .store-header {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+            padding: 10px 20px 20px 20px;
+            border-bottom: 1px solid rgba(23, 122, 6, 0.15);
+            margin-bottom: 15px;
+            white-space: nowrap;
+        }
+
+        .logo-img {
+            width: 120px; 
+            height: 120px;          
+            object-fit: cover;    
+            border-radius: 50%;
+        }
+
+        .store-name {
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            font-size: 40px;
+            font-weight: bold;
+            color: #e9f5ed;
+        }
+
+        /* ===== MENU GROUPS & ITEMS ===== */
+        .menu-group {
+            margin-bottom: 20px;
+            white-space: nowrap;
+        }
+
+        .group-title {
+            font-family: Georgia, serif;
+            font-size: 23px;
+            text-transform: uppercase;
+            color: #041a3a; 
+            padding: 10px 20px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            display: block;
+            color: #d8f3dc; 
+            text-decoration: none;
+            padding: 14px 20px;
+            font-size: 24px; 
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .menu-item:hover {
+            background-color: #2d6a4f; 
+            color: #ffffff;
+            padding-left: 25px; 
+        }
+
+        .menu-item.active {
+            background-color: #40916c; 
+            color: #ffffff;
+            font-weight: bold;
+            border-left: 5px solid #74c69d; 
+        }
+
+        .icon {
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        /* ===== MAIN CONTENT AREA ===== */
+        .main-content {
+            display: block;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            width: 100%;
+            min-height: calc(100vh - 80px);
+            transition: padding-left 0.3s ease;
+        }
+
+        .profile-container {    
+            width: 100%;
+            max-width: 650px;
+            margin-left: 70px;    
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        body:not(.sidebar-collapsed) .main-content {
+            margin-left: 90px;
+        }
+
+        .student-id-card {
+            width: 100%;          
+            max-width: 650px;     
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            border: 1px solid #cbd5e0;
+            margin-top: 0;        
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .id-header {
+            background-color: #1a2b4c;
+            color: #ffffff;
+            padding: 18px 20px;
+            text-align: center;
+        }
+
+        .id-header h2 {
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        .id-content {
+            display: flex;
+            padding: 30px;
+            gap: 25px;
+            align-items: center;
+            background: #f8fafc;
+        }
+
+        .id-photo-container {
+            width: 190px;
+            height: 190px;
+            background-color: #e2e8f0;
+            border: 2px solid #94a3b8;
+            border-radius: 4px;
+            position: relative;
+            flex-shrink: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .id-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+        }
+
+        .photo-placeholder {
+            font-size: 36px;
+            color: #64748b;
+            z-index: 1;
+        }
+
+        .id-details {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex-grow: 1;
+        }
+
+        .id-details p {
+            margin: 0;
+            font-size: 20px;
+            color: #1e293b;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .id-details strong {
+            color: #0f172a;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-right: 6px;
+        }
+
+        .page-title {
+            font-size: 38px;
+            font-weight: bold;
+            color: #041a3a;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+            text-align: left;
+            width: 100%;          
+            max-width: 650px;     
+        }
+
+        @media (max-width: 768px) {
+            .id-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .profile-container {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body class="sidebar-collapsed">
+    <!-- Toggle Button for Collapsible Sidebar -->
+    <button id="sidebar-toggle" class="sidebar-toggle-btn">&#9776;</button>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar collapsed" id="sidebar">
+        <div class="store-header">
+            <img src="logo.jpg" alt="Store Logo" class="logo-img">
+            <span class="store-name">MYRVS</span>
+        </div>
+        
+        <!-- Main Navigation Group -->
+        <div class="menu-group">
+            <div class="group-title">Main Navigation</div>
+            <a href="Home.html" class="menu-item"><span class="icon">🏠</span> Home</a>
+            <a href="Products.html" class="menu-item"><span class="icon">📦</span> Products</a>
+            <a href="Categories.html" class="menu-item"><span class="icon">📁</span> Categories</a>
+        </div>
+        
+        <!-- Shopping Group -->
+        <div class="menu-group">
+            <div class="group-title">Shopping</div>
+            <a href="Cart.html" class="menu-item"><span class="icon">🛒</span> Cart</a>
+            <a href="Orders.html" class="menu-item"><span class="icon">📋</span> My Orders</a>
+            <a href="Wishlist.html" class="menu-item"><span class="icon">❤️</span> Wishlist</a>
+        </div>
+        
+        <!-- Account Group -->
+        <div class="menu-group">
+            <div class="group-title">Account</div>
+            <a href="Profile.html" class="menu-item active"><span class="icon">👤</span> Profile</a>
+            <a href="Setting.html" class="menu-item"><span class="icon">⚙️</span> Settings</a>
+        </div>
+        
+        <!-- System Group -->
+        <div class="menu-group">
+            <div class="group-title">System</div>
+            <a href="Logout.html" class="menu-item"><span class="icon">🚪</span> Logout</a>
+        </div>
+    </div>
+    
+     <!-- MAIN CONTENT AREA -->
+    <div class="main-content">
+        <div class="profile-container">
+            <!-- Page Section Title -->
+            <h1 class="page-title">👤 Profile</h1>
+
+            <div class="student-id-card">
+                <!-- Card Header -->
+                <div class="id-header">
+                    <h2>MY PROFILE</h2>
+                </div>
+
+                <!-- Card Body -->
+                <div class="id-content">
+                    <!-- Photo Slot -->
+                    <div class="id-photo-container">
+                        <img src="profile.jpg" class="id-photo" id="studentPic" alt="Profile Picture">
+                        <!-- Fallback icon if no image is loaded yet -->
+                        <div class="photo-placeholder">
+                            <span>📷</span>
+                        </div>
+                    </div>
+
+                    <!-- Details Display -->
+                    <div class="id-details">
+                        <p><strong>NAME:</strong> <span id="profile-name">Cylene Myrvs F. Dela Cruz</span></p>
+                        <p><strong>COURSE/YR:</strong> <span id="profile-course">BSIT - 2D</span></p>
+                        <p><strong>EMAIL:</strong> <span id="profile-email">cylenemyrvsd@gmail.com</span></p>
+                        <p><strong>ADDRESS:</strong> <span id="profile-address">Bilad, Camiling, Tarlac</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC TO LOAD DATA & SIDEBAR -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+
+            // Toggle sidebar collapse/expand via button
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                sidebar.classList.toggle('collapsed');
+                body.classList.toggle('sidebar-collapsed');
+            });
+
+            // Handle active class switching when clicking any menu item
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                });
+            });
+
+            // Collapse sidebar when clicking outside
+            document.addEventListener('click', (e) => {
+                const isClickInsideSidebar = sidebar.contains(e.target);
+                const isClickOnToggle = toggleBtn.contains(e.target);
+
+                if (!body.classList.contains('sidebar-collapsed') && !isClickInsideSidebar && !isClickOnToggle) {
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                }
+            });
+
+            // ===== LOAD SAVED SETTINGS INTO PROFILE VIEW =====
+            const savedSettings = JSON.parse(localStorage.getItem('myrvs_settings'));
+            if (savedSettings) {
+                if (savedSettings.name || savedSettings.username) {
+                    document.getElementById('profile-name').textContent = savedSettings.name || savedSettings.username;
+                }
+                if (savedSettings.course) {
+                    document.getElementById('profile-course').textContent = savedSettings.course;
+                }
+                if (savedSettings.email) {
+                    document.getElementById('profile-email').textContent = savedSettings.email;
+                }
+                if (savedSettings.address) {
+                    document.getElementById('profile-address').textContent = savedSettings.address;
+                }
+                if (savedSettings.profilePic) {
+                    document.getElementById('studentPic').src = savedSettings.profilePic;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

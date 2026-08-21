@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Myrvs-Home</title>
+    <!-- Import Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <!-- YOUR ORIGINAL CSS WITH 3-COLUMN CARD STYLING ADDED -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #d4e5f5; 
+            position: relative;
+        }
+
+        /* ===== SIDEBAR STYLING & COLLAPSE TRANSITION ===== */
+        .sidebar {
+            width: 300px;
+            background-color: rgb(15, 143, 5); 
+            color: white;
+            padding: 20px 0;
+            box-shadow: 4px 0 10px rgba(79, 217, 11, 0.1);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            flex-shrink: 0;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            padding-left: 0;
+            padding-right: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        /* ===== TOGGLE BUTTON STYLING ===== */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: rgb(15, 143, 5);
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            font-size: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, opacity 0.3s ease, visibility 0.3s ease;
+            
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background-color: #2d6a4f;
+        }
+
+        /* Hides button completely when the sidebar is open */
+        body:not(.sidebar-collapsed) .sidebar-toggle-btn {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* ===== STORE HEADER ===== */
+        .store-header {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+            padding: 10px 20px 20px 20px;
+            border-bottom: 1px solid rgba(23, 122, 6, 0.15);
+            margin-bottom: 15px;
+            white-space: nowrap;
+        }
+
+        .logo-img {
+            width: 120px; 
+            height: 120px;           
+            object-fit: cover;    
+            border-radius: 50%;
+        }
+
+        .store-name {
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            font-size: 40px;
+            font-weight: bold;
+            color: #e9f5ed;
+        }
+
+        /* ===== MENU GROUPS & ITEMS ===== */
+        .menu-group {
+            margin-bottom: 20px;
+            white-space: nowrap;
+        }
+
+        .group-title {
+            font-family: Georgia, serif;
+            font-size: 23px;
+            text-transform: uppercase;
+            color: #041a3a; 
+            padding: 10px 20px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            display: block;
+            color: #d8f3dc; 
+            text-decoration: none;
+            padding: 14px 20px;
+            font-size: 24px; 
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .menu-item:hover {
+            background-color: #2d6a4f; 
+            color: #ffffff;
+            padding-left: 25px; 
+        }
+
+        .menu-item.active {
+            background-color: #40916c; 
+            color: #ffffff;
+            font-weight: bold;
+            border-left: 5px solid #74c69d; 
+        }
+
+        /* ===== EMOJI ICON SPACING ===== */
+        .icon {
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        /* ===== MAIN CONTENT AREA ===== */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            color: #06710d;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .hero-section {
+            width: 100%;
+            max-width: 1200px; 
+            margin: 0 auto 40px auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            
+        }
+
+        .hero-logo-container {
+            padding: 10px;
+            flex-shrink: 0;        
+        }
+        .hero-content {
+            flex-grow: 1;            
+            text-align: left;         
+        }
+
+        .main-content h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 48px;
+            color: #1b4332;
+            margin-bottom: 10px;
+        }
+        .hero-content h1 {
+            font-family: Arial, sans-serif;
+            font-size: 34px;
+            color: #1b4332;
+            margin-bottom: 10px;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: #4a5568;
+            line-height: 1.6;
+            margin: 0;
+            text-align: justify;
+
+        }
+        .main-content h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 35px;
+            color: #1b4332;
+            margin-bottom: 20px;
+        }
+        .main-content p.paragraph-one {
+            color: #4a5568;
+            font-size: 25px;          
+            line-height: 1.6;         
+            text-align: justify;     
+            margin-bottom: 20px;
+        }
+        .main-content p.paragraph-two {
+            color: #4a5568;
+            font-size: 25px;          
+            line-height: 1.6;         
+            text-align: justify;      
+            max-width: 900px;
+        }
+        
+
+        .homepage-logo {
+            width: 200px;         
+            height: 200px;           
+            object-fit: cover;
+            border-radius: 50%;    
+            border: 4px solid #ffffff; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
+            margin: 0 auto 20px auto; 
+            display: block;
+        }
+            .card-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Centered title placed OUTSIDE and on top of the card */
+        .card-header-center {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .card-header-center h3 {
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            color: #1b4332;
+            margin: 0;
+        }
+        /* ===== 3-COLUMN ASYMMETRICAL GRID (Styled to match your theme) ===== */
+        .info-columns {
+            display: flex;
+            flex-wrap: wrap;           
+            justify-content: center;   
+            gap: 25px;
+            width: 100%;
+            max-width: 1350px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .info-columns > .info-card,
+        .info-columns > .card-wrapper {
+           
+            flex: 0 1 calc(50% - 15px); 
+            max-width: 650px;           /* Keeps them from getting too wide */
+            box-sizing: border-box;
+        }
+
+        .info-columns > .info-card:nth-child(3),
+        .info-columns > .card-wrapper:nth-child(3) {
+            flex: 0 1 100%;             /* Takes full width of the row */
+            max-width: 650px;           /* Keeps it the exact same size as the top cards */
+            margin: 0 auto;             /* Centers it horizontally */
+        }
+        .info-columns h3 {
+            font-family: Arial, sans-serif;
+            font-size: 30px;
+            color: #1b4332;
+            margin-bottom: 10px;
+        }
+
+        .info-card {
+            background: #56e960;
+            padding: 30px 35px;         /* Increased padding (from 22px 30px) for a bigger box feel */
+            border-radius: 14px;        /* Slightly softer rounded corners for a larger card */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            
+            display: flex;
+            align-items: center;
+            gap: 25px;                  /* More breathing room between the icon and text */
+            text-align: left;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+           
+        }
+
+        .info-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+            background: #086406;
+        }
+            .info-card:hover h3,
+            .info-card:hover .card-subtitle,
+            .info-card:hover p {
+                color: #ffffff; 
+            }
+
+            .info-card:hover .card-icon {
+                background: #2d6a4f;
+            }
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: #e9f5ed;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .card-content {
+            flex-grow: 2;
+            font-size: 22px;
+        }
+
+        .info-card h3 {
+            font-family: Arial, sans-serif;
+            font-size: 30px;
+            color: #1b4332;
+            margin-bottom: 5px;
+        }
+
+        .info-card .card-subtitle {
+            font-family: Arial, sans-serif;
+            font-size: 38px;
+            font-weight: bold;
+            color: #2d6a4f;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-card p {
+            font-size: 18px;
+            color: #4a5568;
+            line-height: 1.4;
+        }
+
+        /* Responsive: stack them on smaller screens */
+        @media (max-width: 900px) {
+            .info-columns {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="sidebar-collapsed">
+
+    <!-- Toggle Button for Collapsible Sidebar -->
+    <button id="sidebar-toggle" class="sidebar-toggle-btn">&#9776;</button>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar collapsed" id="sidebar">
+        <div class="store-header">
+            <img src="logo.jpg" alt="Store Logo" class="logo-img">
+            <span class="store-name">MYRVS</span>
+        </div>
+        
+        <!-- Main Navigation Group -->
+        <div class="menu-group">
+            <div class="group-title">Main Navigation</div>
+            <a href="Home.html" class="menu-item active" ><span class="icon">🏠</span> Home</a>
+            <a href="Products.html" class="menu-item" ><span class="icon">📦</span> Products</a>
+            <a href="Categories.html" class="menu-item" ><span class="icon">📁</span> Categories</a>
+        </div>
+        
+        <!-- Shopping Group -->
+        <div class="menu-group">
+            <div class="group-title">Shopping</div>
+            <a href="Cart.html" class="menu-item" ><span class="icon">🛒</span> Cart</a>
+            <a href="My Orders.html" class="menu-item" ><span class="icon">📋</span> My Orders</a>
+            <a href="Wishlist.html" class="menu-item" ><span class="icon">❤️</span> Wishlist</a>
+        </div>
+        
+        <!-- Account Group -->
+        <div class="menu-group">
+            <div class="group-title">Account</div>
+            <a href="Profile.html" class="menu-item"><span class="icon">👤</span> Profile</a>
+            <a href="Setting.html" class="menu-item"><span class="icon">⚙️</span> Settings</a>
+        </div>
+        
+        <!-- System Group -->
+        <div class="menu-group">
+            <div class="group-title">System</div>
+            <a href="Logout.html" class="menu-item"><span class="icon">🚪</span> Logout</a>
+        </div>
+    </div>
+    
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-content">
+        <section class="hero-section">
+            <!-- Center Homepage Logo -->
+            <div class="hero-logo-container">
+                <img src="logo.jpg" alt="MYRVS Logo" class="homepage-logo">
+            </div>
+        
+            <div class="hero-content">
+                <h1>Welcome to Myrvs custom dresses</h1>
+                <h2>"Stitched with care, worn with confidence."</h2>
+                <p class="paragraph-one">We specialize in the sale and customization of exquisite dresses tailored exclusively for you. Discover the art of personalized style through our made-to-measure clothing, crafted with artisanal dedication to provide an exceptional, flawless fit for every client.</p>
+                <p class="paragraph-two">If you cannot decide on a design to customize from scratch, you can simply pick a ready-made design from our collection and alter it to match your personal taste.</p>
+            </div>
+        </section>
+
+        <!-- Asymmetrical 3-Column Info Section -->
+        <section class="info-columns">
+            <!-- Card 1 -->
+            <div class="card-wrapper">
+                <div class="card-header-center">
+                    <h3>Products</h3>
+                </div>
+                <div class="info-card">
+                    <div class="card-icon">👗</div>
+                    <div class="card-content">
+                        <p>Explore our signature custom order process alongside refined, ready-to-wear pieces designed to provide an exceptional, flawless fit for every client and make every occasion unforgettable.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="card-wrapper">
+                <div class="card-header-center">
+                    <h3>Promotion</h3>
+                </div>
+                <div class="info-card">
+                    <div class="card-icon">🏷️</div>
+                    <div class="card-content">
+                        <p>Elevate your wardrobe this season with our special promotion offering 15% off your first custom consultation to help bring your dream dress to life.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 3 -->
+            <div class="card-wrapper">
+                <div class="card-header-center">
+                    <h3>New Arrivals</h3>
+                </div>
+                <div class="info-card">
+                    <div class="card-icon">✨</div>
+                    <div class="card-content">
+                        <p>Be the first to wear our latest creations by browsing our new arrivals, where fresh, contemporary silhouettes meet timeless craftsmanship.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC FOR SIDEBAR -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+
+            // Toggle sidebar collapse/expand via button
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                sidebar.classList.toggle('collapsed');
+                body.classList.toggle('sidebar-collapsed');
+            });
+
+            // Handle active class switching when clicking any menu item
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                });
+            });
+
+            // Collapse sidebar when clicking outside
+            document.addEventListener('click', (e) => {
+                const isClickInsideSidebar = sidebar.contains(e.target);
+                const isClickOnToggle = toggleBtn.contains(e.target);
+
+                if (!body.classList.contains('sidebar-collapsed') && !isClickInsideSidebar && !isClickOnToggle) {
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

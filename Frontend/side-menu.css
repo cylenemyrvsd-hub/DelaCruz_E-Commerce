@@ -1,0 +1,349 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #d4e5f5; 
+            position: relative;
+        }
+
+        /* ===== SIDEBAR STYLING & COLLAPSE TRANSITION ===== */
+        .sidebar {
+            width: 300px;
+            background-color: rgb(15, 143, 5); 
+            color: white;
+            padding: 20px 0;
+            box-shadow: 4px 0 10px rgba(79, 217, 11, 0.1);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            flex-shrink: 0;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            padding-left: 0;
+            padding-right: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        /* ===== TOGGLE BUTTON STYLING ===== */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: rgb(15, 143, 5);
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            font-size: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, opacity 0.3s ease, visibility 0.3s ease;
+            
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background-color: #2d6a4f;
+        }
+
+        /* Hides button completely when the sidebar is open */
+        body:not(.sidebar-collapsed) .sidebar-toggle-btn {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* ===== STORE HEADER ===== */
+        .store-header {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+            padding: 10px 20px 20px 20px;
+            border-bottom: 1px solid rgba(23, 122, 6, 0.15);
+            margin-bottom: 15px;
+            white-space: nowrap;
+        }
+
+        .logo-img {
+            width: 120px; 
+            height: 120px;           
+            object-fit: cover;    
+            border-radius: 50%;
+        }
+
+        .store-name {
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            font-size: 40px;
+            font-weight: bold;
+            color: #e9f5ed;
+        }
+
+        /* ===== MENU GROUPS & ITEMS ===== */
+        .menu-group {
+            margin-bottom: 20px;
+            white-space: nowrap;
+        }
+
+        .group-title {
+            font-family: Georgia, serif;
+            font-size: 23px;
+            text-transform: uppercase;
+            color: #041a3a; 
+            padding: 10px 20px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            display: block;
+            color: #d8f3dc; 
+            text-decoration: none;
+            padding: 14px 20px;
+            font-size: 24px; 
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .menu-item:hover {
+            background-color: #2d6a4f; 
+            color: #ffffff;
+            padding-left: 25px; 
+        }
+
+        .menu-item.active {
+            background-color: #40916c; 
+            color: #ffffff;
+            font-weight: bold;
+            border-left: 5px solid #74c69d; 
+        }
+
+        /* ===== EMOJI ICON SPACING ===== */
+        .icon {
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        /* ===== MAIN CONTENT AREA ===== */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            color: #06710d;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .hero-section {
+            width: 100%;
+            max-width: 1200px; 
+            margin: 0 auto 40px auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            
+        }
+
+        .hero-logo-container {
+            padding: 10px;
+            flex-shrink: 0;        
+        }
+        .hero-content {
+            flex-grow: 1;            
+            text-align: left;         
+        }
+
+        .main-content h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 48px;
+            color: #1b4332;
+            margin-bottom: 10px;
+        }
+        .hero-content h1 {
+            font-family: Arial, sans-serif;
+            font-size: 34px;
+            color: #1b4332;
+            margin-bottom: 10px;
+        }
+
+        .hero-content p {
+            font-size: 16px;
+            color: #4a5568;
+            line-height: 1.6;
+            margin: 0;
+            text-align: justify;
+
+        }
+        .main-content h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 35px;
+            color: #1b4332;
+            margin-bottom: 20px;
+        }
+
+        .main-content p.paragraph-one {
+            color: #4a5568;
+            font-size: 25px;          
+            line-height: 1.6;         
+            text-align: justify;     
+            margin-bottom: 20px;
+        }
+        .main-content p.paragraph-two {
+            color: #4a5568;
+            font-size: 25px;          
+            line-height: 1.6;         
+            text-align: justify;      
+            max-width: 900px;
+        }
+
+        .homepage-logo {
+            width: 230px;         
+            height: 230px;           
+            object-fit: cover;
+            border-radius: 50%;    
+            border: 4px solid #ffffff; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
+            margin: 0 auto 20px auto; 
+            display: block;
+        }
+            .card-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Centered title placed OUTSIDE and on top of the card */
+        .card-header-center {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .card-header-center h3 {
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            color: #1b4332;
+            margin: 0;
+        }
+        /* ===== 3-COLUMN ASYMMETRICAL GRID (Styled to match your theme) ===== */
+        .info-columns {
+            display: flex;
+            flex-wrap: wrap;           
+            justify-content: center;   
+            gap: 25px;
+            width: 100%;
+            max-width: 1350px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .info-columns > .info-card,
+        .info-columns > .card-wrapper {
+           
+            flex: 0 1 calc(50% - 15px); 
+            max-width: 650px;           /* Keeps them from getting too wide */
+            box-sizing: border-box;
+        }
+
+        .info-columns > .info-card:nth-child(3),
+        .info-columns > .card-wrapper:nth-child(3) {
+            flex: 0 1 100%;             /* Takes full width of the row */
+            max-width: 650px;           /* Keeps it the exact same size as the top cards */
+            margin: 0 auto;             /* Centers it horizontally */
+        }
+        .info-columns h3 {
+            font-family: Arial, sans-serif;
+            font-size: 30px;
+            color: #1b4332;
+            margin-bottom: 10px;
+        }
+
+        .info-card {
+            background: #56e960;
+            padding: 30px 35px;         /* Increased padding (from 22px 30px) for a bigger box feel */
+            border-radius: 14px;        /* Slightly softer rounded corners for a larger card */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            
+            display: flex;
+            align-items: center;
+            gap: 25px;                  /* More breathing room between the icon and text */
+            text-align: left;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+           
+        }
+
+        .info-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+            background: #086406;
+        }
+            .info-card:hover h3,
+            .info-card:hover .card-subtitle,
+            .info-card:hover p {
+                color: #ffffff; 
+            }
+
+            .info-card:hover .card-icon {
+                background: #2d6a4f;
+            }
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: #e9f5ed;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .card-content {
+            flex-grow: 1;
+        }
+
+        .info-card h3 {
+            font-family: Arial, sans-serif;
+            font-size: 30px;
+            color: #1b4332;
+            margin-bottom: 5px;
+        }
+
+        .info-card .card-subtitle {
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d6a4f;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-card p {
+            font-size: 18px;
+            color: #4a5568;
+            line-height: 1.4;
+        }
+
+        /* Responsive: stack them on smaller screens */
+        @media (max-width: 900px) {
+            .info-columns {
+                flex-direction: column;
+            }
+        }

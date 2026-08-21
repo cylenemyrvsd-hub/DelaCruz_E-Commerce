@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYRVS - Wishlist</title>
+    <!-- Import Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #d4e5f5; 
+            position: relative;
+        }
+
+        /* ===== SIDEBAR STYLING & COLLAPSE TRANSITION ===== */
+        .sidebar {
+            width: 300px;
+            background-color: rgb(15, 143, 5); 
+            color: #d4e5f5;
+            padding: 20px 0;
+            box-shadow: 4px 0 10px rgba(79, 217, 11, 0.1);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            flex-shrink: 0;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            padding-left: 0;
+            padding-right: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        /* ===== TOGGLE BUTTON STYLING ===== */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: rgb(15, 143, 5);
+            color: #d4e5f5;
+            border: none;
+            padding: 10px 14px;
+            font-size: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background-color: #2d6a4f;
+        }
+
+        body:not(.sidebar-collapsed) .sidebar-toggle-btn {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* ===== STORE HEADER ===== */
+        .store-header {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+            padding: 10px 20px 20px 20px;
+            border-bottom: 1px solid rgba(23, 122, 6, 0.15);
+            margin-bottom: 15px;
+            white-space: nowrap;
+        }
+
+        .logo-img {
+            width: 120px; 
+            height: 120px;          
+            object-fit: cover;    
+            border-radius: 50%;
+        }
+
+        .store-name {
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            font-size: 40px;
+            font-weight: bold;
+            color: #e9f5ed;
+        }
+
+        /* ===== MENU GROUPS & ITEMS ===== */
+        .menu-group {
+            margin-bottom: 20px;
+            white-space: nowrap;
+        }
+
+        .group-title {
+            font-family: Georgia, serif;
+            font-size: 23px;
+            text-transform: uppercase;
+            color: #041a3a; 
+            padding: 10px 20px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            display: block;
+            color: #d8f3dc; 
+            text-decoration: none;
+            padding: 14px 20px;
+            font-size: 24px; 
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .menu-item:hover {
+            background-color: #2d6a4f; 
+            color: #ffffff;
+            padding-left: 25px; 
+        }
+
+        .menu-item.active {
+            background-color: #40916c; 
+            color: #ffffff;
+            font-weight: bold;
+            border-left: 5px solid #74c69d; 
+        }
+
+        .icon {
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        /* ===== MAIN CONTENT AREA ===== */
+        .wishlist-container {
+            max-width: 1300px;
+            width: 85%;
+            margin: 40px auto;
+            background: #50f95e;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #1a202c;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            font-size: 36px;
+        }
+
+        .wishlist-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 25px 0;
+        }
+
+        .btn-move-cart {
+            background-color: #1d3557;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            margin-right: 10px;
+        }
+
+        .btn-move-cart:hover {
+            background-color: #457b9d;
+        }
+
+        .btn-remove {
+            background-color: #f85d6a;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .btn-remove:hover {
+            background-color: #d90429;
+        }
+
+        .empty-wishlist {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+            padding: 40px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #155087;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .wishlist-container {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+   </style>
+</head>
+<body class="sidebar-collapsed">
+    <!-- Toggle Button for Collapsible Sidebar -->
+    <button id="sidebar-toggle" class="sidebar-toggle-btn">&#9776;</button>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar collapsed" id="sidebar">
+        <div class="store-header">
+            <img src="logo.jpg" alt="Store Logo" class="logo-img">
+            <span class="store-name">MYRVS</span>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">Main Navigation</div>
+            <a href="Home.html" class="menu-item"><span class="icon">🏠</span> Home</a>
+            <a href="Products.html" class="menu-item"><span class="icon">📦</span> Products</a>
+            <a href="Categories.html" class="menu-item"><span class="icon">📁</span> Categories</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">Shopping</div>
+            <a href="Cart.html" class="menu-item"><span class="icon">🛒</span> Cart</a>
+            <a href="My Orders.html" class="menu-item"><span class="icon">📋</span> My Orders</a>
+            <a href="Wishlist.html" class="menu-item active"><span class="icon">❤️</span> Wishlist</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">Account</div>
+            <a href="Profile.html" class="menu-item"><span class="icon">👤</span> Profile</a>
+            <a href="Setting.html" class="menu-item"><span class="icon">⚙️</span> Settings</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">System</div>
+            <a href="Logout.html" class="menu-item"><span class="icon">🚪</span> Logout</a>
+        </div>
+    </div>
+    
+    <!-- MAIN CONTENT AREA -->
+    <div class="wishlist-container">
+        <h2>❤️ Your Wishlist</h2>
+        <p style="font-size: 16px; color: #555; margin-bottom: 25px;">Here are your favorite items saved for later. Ready to bring them home?</p>
+        
+        <div id="wishlist-items-list"></div>
+
+        <a href="Products.html" class="back-link">&#8592; Explore More Products</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                sidebar.classList.toggle('collapsed');
+                body.classList.toggle('sidebar-collapsed');
+            });
+
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                const isClickInsideSidebar = sidebar.contains(e.target);
+                const isClickOnToggle = toggleBtn.contains(e.target);
+
+                if (!body.classList.contains('sidebar-collapsed') && !isClickInsideSidebar && !isClickOnToggle) {
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                }
+            });
+
+            // ===== WISHLIST DISPLAY & MANAGEMENT LOGIC =====
+            const wishlistList = document.getElementById('wishlist-items-list');
+
+            function renderWishlist() {
+                let wishlist = JSON.parse(localStorage.getItem('myrvs_wishlist')) || [];
+
+                if (wishlist.length === 0) {
+                    wishlistList.innerHTML = '<div class="empty-wishlist">Your wishlist is currently empty.</div>';
+                    return;
+                }
+
+                wishlistList.innerHTML = '';
+                
+                wishlist.forEach((item, index) => {
+                    const wishItem = document.createElement('div');
+                    wishItem.classList.add('wishlist-item');
+                    
+                    wishItem.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 20px; flex-grow: 1;">
+                            <img src="${item.image}" alt="${item.title}" style="width: 140px; height: 140px; object-fit: contain; background: #e2e8f0; border-radius: 6px;">
+                            <div style="flex-grow: 1;">
+                                <div style="font-size: 24px; font-weight: bold; color: #081429; margin-bottom: 5px;">${item.title}</div>
+                                <div style="font-size: 16px; color: #555; margin-bottom: 8px;">${item.description || ''}</div>
+                                <div style="font-size: 22px; color: #173f64; font-weight: bold;">${item.price}</div>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn-move-cart" data-index="${index}">Move to Cart</button>
+                            <button class="btn-remove" data-index="${index}">Remove</button>
+                        </div>
+                    `;
+                    wishlistList.appendChild(wishItem);
+                });
+
+                // Move to Cart functionality
+                document.querySelectorAll('.btn-move-cart').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const index = e.target.getAttribute('data-index');
+                        let wishlist = JSON.parse(localStorage.getItem('myrvs_wishlist')) || [];
+                        let cart = JSON.parse(localStorage.getItem('myrvs_cart')) || [];
+
+                        const itemToMove = wishlist[index];
+                        
+                        // Add quantity default if not set
+                        itemToMove.quantity = 1;
+                        itemToMove.selected = true;
+
+                        // Push to cart and save
+                        cart.push(itemToMove);
+                        localStorage.setItem('myrvs_cart', JSON.stringify(cart));
+
+                        // Remove from wishlist
+                        wishlist.splice(index, 1);
+                        localStorage.setItem('myrvs_wishlist', JSON.stringify(wishlist));
+
+                        renderWishlist();
+                        alert('Item moved to your Cart successfully!');
+                    });
+                });
+
+                // Remove functionality
+                document.querySelectorAll('.btn-remove').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const index = e.target.getAttribute('data-index');
+                        let wishlist = JSON.parse(localStorage.getItem('myrvs_wishlist')) || [];
+                        
+                        wishlist.splice(index, 1);
+                        localStorage.setItem('myrvs_wishlist', JSON.stringify(wishlist));
+                        renderWishlist(); 
+                    });
+                });
+            }
+
+            renderWishlist();
+        });
+    </script>
+</body>
+</html>

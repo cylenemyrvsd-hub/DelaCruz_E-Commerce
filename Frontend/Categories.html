@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYRVS - Categories</title>
+    <!-- Import Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #d4e5f5; 
+            position: relative;
+        }
+
+        /* ===== SIDEBAR STYLING & COLLAPSE TRANSITION ===== */
+        .sidebar {
+            width: 300px;
+            background-color: rgb(15, 143, 5); 
+            color: white;
+            padding: 20px 0;
+            box-shadow: 4px 0 10px rgba(79, 217, 11, 0.1);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            flex-shrink: 0;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            padding-left: 0;
+            padding-right: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        /* ===== TOGGLE BUTTON STYLING ===== */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: rgb(15, 143, 5);
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            font-size: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, opacity 0.3s ease, visibility 0.3s ease;
+            
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background-color: #2d6a4f;
+        }
+
+        /* Hides button completely when the sidebar is open */
+        body:not(.sidebar-collapsed) .sidebar-toggle-btn {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* ===== STORE HEADER ===== */
+        .store-header {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+            padding: 10px 20px 20px 20px;
+            border-bottom: 1px solid rgba(23, 122, 6, 0.15);
+            margin-bottom: 15px;
+            white-space: nowrap;
+        }
+
+        .logo-img {
+            width: 120px; 
+            height: 120px;           
+            object-fit: cover;    
+            border-radius: 50%;
+        }
+
+        .store-name {
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            font-size: 40px;
+            font-weight: bold;
+            color: #e9f5ed;
+        }
+
+        /* ===== MENU GROUPS & ITEMS ===== */
+        .menu-group {
+            margin-bottom: 20px;
+            white-space: nowrap;
+        }
+
+        .group-title {
+            font-family: Georgia, serif;
+            font-size: 23px;
+            text-transform: uppercase;
+            color: #041a3a; 
+            padding: 10px 20px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            display: block;
+            color: #d8f3dc; 
+            text-decoration: none;
+            padding: 14px 20px;
+            font-size: 24px; 
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .menu-item:hover {
+            background-color: #2d6a4f; 
+            color: #ffffff;
+            padding-left: 25px; 
+        }
+
+        .menu-item.active {
+            background-color: #40916c; 
+            color: #ffffff;
+            font-weight: bold;
+            border-left: 5px solid #74c69d; 
+        }
+
+        /* ===== EMOJI ICON SPACING ===== */
+        .icon {
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+            /*====MAIN CONTENT AREA STYLING====*/
+        .main-content {
+            transition: margin-left 0.3s ease, width 0.3s ease;
+            padding: 2.5rem;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        /* Container */
+        .categories-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-top: 3.5rem;
+        }
+
+        .categories-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .categories-header h1 {
+            font-size: 2.2rem;
+            color: #222;
+            margin-bottom: 0.5rem;
+        }
+
+        
+
+        /* Accordion Layout: 3 Cards Side-by-Side */
+        .category-accordion {
+            display: flex;
+            gap: 1.5rem;
+            height: 500px; 
+            width: 100%;
+        }
+
+        /* Individual Card Styling */
+        .category-card {
+            flex: 1; /* Equal width by default */
+            background: #77ea50;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            transition: flex 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        /* Hover Animation: Expands the hovered card */
+        .category-card:hover {
+            flex: 2.2; 
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Image Wrapper */
+        .category-img-wrapper {
+            width: 100%;
+            height: 60%; 
+            overflow: hidden;
+            background: #f4f4f4;
+            transition: height 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .category-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            transition: height 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Card Information */
+        .category-info {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 40%;
+            box-sizing: border-box;
+        }
+
+        .category-info h3 {
+            font-size: 1.7rem;
+            color: #0d0343;
+            margin: 0 0 0.5rem 0;
+            white-space: nowrap;
+        }
+
+        /* Description Text - Hidden by default, slides open on hover */
+        .category-desc {
+            font-size: 1.2rem;
+            color: #04084a;
+            line-height: 1.4;
+            margin: 0 0 1rem 0;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.4s ease, max-height 0.4s ease;
+        }
+
+        .category-card:hover .category-desc {
+            opacity: 1;
+            max-height: 120px; 
+        }
+
+        .explore-btn {
+            font-size: 0.85rem;
+            color: #b8860b; 
+            font-weight: 600;
+            margin-top: auto;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .category-card:hover .explore-btn {
+            opacity: 1;
+        }
+
+        /* Responsive layout for mobile and smaller tablets */
+        @media (max-width: 768px) {
+            .category-accordion {
+                flex-direction: column;
+                height: auto;
+            }
+            .category-card {
+                height: 320px;
+                flex: none;
+            }
+            .category-card:hover {
+                flex: none;
+            }
+            .category-desc {
+                opacity: 1;
+                max-height: 100px; /* Always visible on mobile since hover doesn't apply well */
+            }
+        }
+    
+    </style>
+</head>
+    <body class="sidebar-collapsed">
+            <!-- Toggle Button for Collapsible Sidebar -->
+            <button id="sidebar-toggle" class="sidebar-toggle-btn">&#9776;</button>
+
+            <!-- SIDEBAR -->
+            <div class="sidebar collapsed" id="sidebar">
+                <div class="store-header">
+                    <img src="logo.jpg" alt="Store Logo" class="logo-img">
+                    <span class="store-name">MYRVS</span>
+                </div>
+                
+                <!-- Main Navigation Group -->
+                <div class="menu-group">
+                    <div class="group-title">Main Navigation</div>
+                    <a href="Home.html" class="menu-item"><span class="icon">🏠</span> Home</a>
+                    <a href="Products.html" class="menu-item"><span class="icon">📦</span> Products</a>
+                    <a href="Categories.html" class="menu-item active "><span class="icon">📁</span> Categories</a>
+                </div>
+                
+                <!-- Shopping Group -->
+                <div class="menu-group">
+                    <div class="group-title">Shopping</div>
+                    <a href="Cart.html" class="menu-item"><span class="icon">🛒</span> Cart</a>
+                    <a href="My Orders.html" class="menu-item"><span class="icon">📋</span> My Orders</a>
+                    <a href="Wishlist.html" class="menu-item"><span class="icon">❤️</span> Wishlist</a>
+                </div>
+                
+                <!-- Account Group -->
+                <div class="menu-group">
+                    <div class="group-title">Account</div>
+                    <a href="Profile.html" class="menu-item"><span class="icon">👤</span> Profile</a>
+                    <a href="Setting.html" class="menu-item"><span class="icon">⚙️</span> Settings</a>
+                </div>
+                
+                <!-- System Group -->
+                <div class="menu-group">
+                    <div class="group-title">System</div>
+                    <a href="Logout.html" class="menu-item"><span class="icon">🚪</span> Logout</a>
+                </div>
+            </div>
+    
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-content">
+        <div class="categories-container">
+            <header class="categories-header">
+                <h1>Product Categories</h1>
+            </header>
+
+            <div class="category-accordion">
+                <!-- Category 1: Sunday Dress -->
+                <div class="category-card">
+                    <div class="category-img-wrapper">
+                        <img src="Maribelle.Sunday.jpg" alt="Sunday Dress">
+                    </div>
+                    <div class="category-info">
+                        <h3>Sunday Dress</h3>
+                        <p class="category-desc">Light, breezy, and effortlessly graceful styles crafted for relaxed weekends, church gatherings, and daytime socializing.</p>
+                        <span class="explore-btn">View Collection</span>
+                    </div>
+                </div>
+
+                <!-- Category 2: Casual & Midi Dresses -->
+                <div class="category-card">
+                    <div class="category-img-wrapper">
+                        <img src="Ivy.Casual.jpg" alt="Casual & Midi Dresses">
+                    </div>
+                    <div class="category-info">
+                        <h3>Casual & Midi Dresses</h3>
+                        <p class="category-desc">Versatile, comfortable pieces designed for everyday wear, brunch dates, and smart-casual outings.</p>
+                        <span class="explore-btn">View Collection</span>
+                    </div>
+                </div>
+
+                <!-- Category 3: Evening & Formal Gowns -->
+                <div class="category-card">
+                    <div class="category-img-wrapper">
+                        <img src="Adrielle.Gown.jpg" alt="Evening & Formal Gowns">
+                    </div>
+                    <div class="category-info">
+                        <h3>Evening & Formal Gowns</h3>
+                        <p class="category-desc">Elegant, floor-length masterpieces tailored with intricate detail and luxurious fabrics for galas, weddings, and high-end formal events.</p>
+                        <span class="explore-btn">View Collection</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+
+            // Toggle sidebar collapse/expand via button
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                sidebar.classList.toggle('collapsed');
+                body.classList.toggle('sidebar-collapsed');
+            });
+
+            // Handle active class switching when clicking any menu item
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                });
+            });
+
+            // Collapse sidebar when clicking outside
+            document.addEventListener('click', (e) => {
+                const isClickInsideSidebar = sidebar.contains(e.target);
+                const isClickOnToggle = toggleBtn.contains(e.target);
+
+                if (!body.classList.contains('sidebar-collapsed') && !isClickInsideSidebar && !isClickOnToggle) {
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                }
+            });
+        });
+    </script>
+    </body>
+</html>
