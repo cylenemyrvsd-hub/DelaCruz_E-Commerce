@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYRVS - Order Management</title>
+    <!-- Import Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #d4e5f5; 
+            position: relative;
+        }
+
+        /* ===== SIDEBAR STYLING & COLLAPSE TRANSITION ===== */
+        .sidebar {
+            width: 300px;
+            background-color: rgb(15, 143, 5); 
+            color: #d4e5f5;
+            padding: 20px 0;
+            box-shadow: 4px 0 10px rgba(79, 217, 11, 0.1);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            flex-shrink: 0;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            padding-left: 0;
+            padding-right: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        /* ===== TOGGLE BUTTON STYLING ===== */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: rgb(15, 143, 5);
+            color: #d4e5f5;
+            border: none;
+            padding: 10px 14px;
+            font-size: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background-color: #2d6a4f;
+        }
+
+        body:not(.sidebar-collapsed) .sidebar-toggle-btn {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* ===== STORE HEADER ===== */
+        .store-header {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+            padding: 10px 20px 20px 20px;
+            border-bottom: 1px solid rgba(23, 122, 6, 0.15);
+            margin-bottom: 15px;
+            white-space: nowrap;
+        }
+
+        .logo-img {
+            width: 120px; 
+            height: 120px;           
+            object-fit: cover;    
+            border-radius: 50%;
+        }
+
+        .store-name {
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            font-size: 40px;
+            font-weight: bold;
+            color: #e9f5ed;
+        }
+
+        /* ===== MENU GROUPS & ITEMS ===== */
+        .menu-group {
+            margin-bottom: 20px;
+            white-space: nowrap;
+        }
+
+        .group-title {
+            font-family: Georgia, serif;
+            font-size: 23px;
+            text-transform: uppercase;
+            color: #041a3a; 
+            padding: 10px 20px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            display: block;
+            color: #d8f3dc; 
+            text-decoration: none;
+            padding: 14px 20px;
+            font-size: 24px; 
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .menu-item:hover {
+            background-color: #2d6a4f; 
+            color: #ffffff;
+            padding-left: 25px; 
+        }
+
+        .menu-item.active {
+            background-color: #40916c; 
+            color: #ffffff;
+            font-weight: bold;
+            border-left: 5px solid #74c69d; 
+        }
+
+        .icon {
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        /* ===== MAIN CONTENT AREA ===== */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px 60px;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-bar {
+            margin-bottom: 25px;
+        }
+
+        .catalog-title {
+            font-size: 38px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 5px;
+        }
+
+        .catalog-subtitle {
+            font-size: 18px;
+            color: #4a5568;
+        }
+
+        /* ===== SUMMARY METRICS CARDS ===== */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: #ffffff;
+            padding: 22px 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .metric-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #4a5568;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #155087;
+            margin-top: 5px;
+        }
+
+        .metric-icon {
+            font-size: 36px;
+        }
+
+        /* ===== FILTER BUTTONS ===== */
+        .filter-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 22px;
+            border: 2px solid #155087;
+            background-color: transparent;
+            color: #155087;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #155087;
+            color: #ffffff;
+        }
+
+        /* ===== ORDERS TABLE ===== */
+        .table-card {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        thead {
+            background-color: #155087;
+            color: #ffffff;
+        }
+
+        th {
+            padding: 18px 20px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        td {
+            padding: 18px 20px;
+            font-size: 16px;
+            color: #2d3748;
+            border-bottom: 1px solid #edf2f7;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background-color: #f0f9f0;
+        }
+
+        .order-id {
+            font-weight: 800;
+            color: #0f8f05;
+        }
+
+        .customer-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .customer-name {
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .customer-contact {
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .product-preview-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .order-product-img {
+            width: 55px;
+            height: 55px;
+            object-fit: cover;
+            border-radius: 6px;
+            background-color: #e2e8f0;
+            border: 1px solid #cbd5e0;
+        }
+
+        .item-details {
+            font-size: 13px;
+            color: #4a5568;
+            line-height: 1.4;
+        }
+
+        .item-badge {
+            display: inline-block;
+            background-color: #e2e8f0;
+            color: #2d3748;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        /* ===== STATUS BADGES & SELECT ===== */
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .badge-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-processing {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-completed {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-cancelled {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-select {
+            padding: 8px 12px;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            outline: none;
+            background-color: #ffffff;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .status-select:focus {
+            border-color: #155087;
+        }
+
+        .empty-orders {
+            text-align: center;
+            padding: 50px 20px;
+            color: #718096;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 900px) {
+            .table-card {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body class="sidebar-collapsed">
+
+    <!-- Toggle Button for Collapsible Sidebar -->
+    <button id="sidebar-toggle" class="sidebar-toggle-btn">&#9776;</button>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar collapsed" id="sidebar">
+        <div class="store-header">
+            <img src="logo.jpg" alt="Store Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/120?text=MYRVS'">
+            <span class="store-name">MYRVS</span>
+        </div>
+        
+        <!-- Navigation Menu -->
+        <div class="menu-group">
+            <div class="group-title">Main Navigation</div>
+            <a href="sellerdashboard.html" class="menu-item"><span class="icon">📊</span> Seller Dashboard</a>
+            <a href="sellerproduct.html" class="menu-item"><span class="icon">📦</span> Manage Product</a>
+            <a href="selleraddproduct.html" class="menu-item"><span class="icon">➕</span> Add Product</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">Management</div>
+            <a href="sellerordersection.html" class="menu-item active"><span class="icon">📋</span> Order Section</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">Account</div>
+            <a href="sellerprofile.html" class="menu-item"><span class="icon">👤</span> Seller Profile</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">System</div>
+            <a href="sellerlogout.html" class="menu-item"><span class="icon">🚪</span> Logout</a>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-content">
+        <div class="header-bar">
+            <h2 class="catalog-title">Order Management</h2>
+            <p class="catalog-subtitle">Track, filter, and manage customer orders placed for MYRVS dresses.</p>
+        </div>
+
+        <!-- SUMMARY METRICS CARDS -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div>
+                    <div class="metric-title">Total Orders</div>
+                    <div class="metric-value" id="metricTotal">0</div>
+                </div>
+                <div class="metric-icon">🛍️</div>
+            </div>
+
+            <div class="metric-card">
+                <div>
+                    <div class="metric-title">Pending</div>
+                    <div class="metric-value" id="metricPending">0</div>
+                </div>
+                <div class="metric-icon">⏳</div>
+            </div>
+
+            <div class="metric-card">
+                <div>
+                    <div class="metric-title">Processing</div>
+                    <div class="metric-value" id="metricProcessing">0</div>
+                </div>
+                <div class="metric-icon">✂️</div>
+            </div>
+
+            <div class="metric-card">
+                <div>
+                    <div class="metric-title">Completed</div>
+                    <div class="metric-value" id="metricCompleted">0</div>
+                </div>
+                <div class="metric-icon">✅</div>
+            </div>
+        </div>
+
+        <!-- FILTER BUTTONS -->
+        <div class="filter-container">
+            <button class="filter-btn active" data-filter="all">All Orders</button>
+            <button class="filter-btn" data-filter="Pending">Pending</button>
+            <button class="filter-btn" data-filter="Processing">Processing</button>
+            <button class="filter-btn" data-filter="Completed">Completed</button>
+            <button class="filter-btn" data-filter="Cancelled">Cancelled</button>
+        </div>
+
+        <!-- ORDERS TABLE CONTAINER -->
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Dress Details</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <!-- Dynamic Rows Rendered Here -->
+                </tbody>
+            </table>
+            <div id="emptyMessage" class="empty-orders" style="display: none;">
+                No orders found under this filter.
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Exact MYRVS catalog extracted directly from your Products page
+        const productCatalog = [
+            { name: "MARIBELLE", price: "₱1,200.00", image: "Maribelle.Sunday.jpg", category: "Sunday Collection" },
+            { name: "ROSALIND", price: "₱1,800.00", image: "Rosalind.Sunday.jpg", category: "Sunday Collection" },
+            { name: "VIOLLETTA", price: "₱1,100.00", image: "Violetta.Sunday.jpg", category: "Sunday Collection" },
+            { name: "IVY", price: "₱850.00", image: "Ivy.Casual.jpg", category: "Casual Collection" },
+            { name: "ELARA", price: "₱950.00", image: "Elara.Casual.jpg", category: "Casual Collection" },
+            { name: "LIORA", price: "₱860.00", image: "Liora.Casual.jpg", category: "Casual Collection" },
+            { name: "ELOWEN", price: "₱1,250.00", image: "Elowen.Sunday.jpg", category: "Sunday Collection" },
+            { name: "DAISY", price: "₱1,800.00", image: "Daisy.Gown.jpg", category: "Gown Collection" },
+            { name: "ADRIELLE", price: "₱2,350.00", image: "Adrielle.Gown.jpg", category: "Gown Collection" }
+        ];
+
+        const sampleCustomers = [
+            { name: 'Sophia Lorenzana', email: 'sophia.lorenzana@gmail.com', phone: '+63 917 882 1042' },
+            { name: 'Clarisse Dizon', email: 'clarisse.dizon@yahoo.com', phone: '+63 920 411 9081' },
+            { name: 'Alyssa Marie Mendoza', email: 'alyssa.mendoza@outlook.com', phone: '+63 908 652 3319' },
+            { name: 'Samantha Nicole Villanueva', email: 'sam.villanueva@gmail.com', phone: '+63 919 301 7724' },
+            { name: 'Beatrice Patricia Cruz', email: 'tricia.cruz@gmail.com', phone: '+63 927 500 8812' }
+        ];
+
+        const sampleStatuses = ['Pending', 'Processing', 'Completed', 'Pending', 'Processing'];
+
+        // Generate guaranteed safe orders using the explicit catalog
+        function generateDefaultOrders() {
+            return productCatalog.map((prod, index) => {
+                const customer = sampleCustomers[index % sampleCustomers.length];
+                return {
+                    id: `ORD-200${index + 1}`,
+                    customerName: customer.name,
+                    contact: `${customer.email} | ${customer.phone}`,
+                    productName: prod.name,
+                    productPrice: prod.price,
+                    productImage: prod.image,
+                    productCategory: prod.category,
+                    status: sampleStatuses[index % sampleStatuses.length],
+                    date: `2026-10-${18 + index}`
+                };
+            });
+        }
+
+        let currentFilter = 'all';
+
+        // Retrieve orders safely without undefined fields
+        function getOrders() {
+            const stored = localStorage.getItem('myrvs_orders');
+            if (!stored) {
+                const defaults = generateDefaultOrders();
+                localStorage.setItem('myrvs_orders', JSON.stringify(defaults));
+                return defaults;
+            }
+            try {
+                const parsed = JSON.parse(stored);
+                // Ensure every loaded order has valid fallback fields if properties differ
+                return parsed.map((o, idx) => ({
+                    id: o.id || `ORD-200${idx + 1}`,
+                    customerName: o.customerName || sampleCustomers[idx % sampleCustomers.length].name,
+                    contact: o.contact || `${sampleCustomers[idx % sampleCustomers.length].email} | ${sampleCustomers[idx % sampleCustomers.length].phone}`,
+                    productName: o.productName || o.name || productCatalog[idx % productCatalog.length].name,
+                    productPrice: o.productPrice || o.price || productCatalog[idx % productCatalog.length].price,
+                    productImage: o.productImage || o.image || productCatalog[idx % productCatalog.length].image,
+                    productCategory: o.productCategory || o.category || productCatalog[idx % productCatalog.length].category,
+                    status: o.status || 'Pending',
+                    date: o.date || '2026-10-22'
+                }));
+            } catch(e) {
+                const defaults = generateDefaultOrders();
+                localStorage.setItem('myrvs_orders', JSON.stringify(defaults));
+                return defaults;
+            }
+        }
+
+        // Save Orders state to LocalStorage
+        function saveOrders(orders) {
+            localStorage.setItem('myrvs_orders', JSON.stringify(orders));
+        }
+
+        // Render Summary Metrics
+        function updateMetrics(orders) {
+            document.getElementById('metricTotal').innerText = orders.length;
+            document.getElementById('metricPending').innerText = orders.filter(o => o.status === 'Pending').length;
+            document.getElementById('metricProcessing').innerText = orders.filter(o => o.status === 'Processing').length;
+            document.getElementById('metricCompleted').innerText = orders.filter(o => o.status === 'Completed').length;
+        }
+
+        // Get Badge CSS Class based on Status
+        function getBadgeClass(status) {
+            switch (status) {
+                case 'Pending': return 'badge-pending';
+                case 'Processing': return 'badge-processing';
+                case 'Completed': return 'badge-completed';
+                case 'Cancelled': return 'badge-cancelled';
+                default: return 'badge-pending';
+            }
+        }
+
+        // Render Table Rows
+        function renderOrders() {
+            const orders = getOrders();
+            updateMetrics(orders);
+
+            const tbody = document.getElementById('ordersTableBody');
+            const emptyMessage = document.getElementById('emptyMessage');
+            tbody.innerHTML = '';
+
+            const filteredOrders = currentFilter === 'all' 
+                ? orders 
+                : orders.filter(o => o.status === currentFilter);
+
+            if (filteredOrders.length === 0) {
+                emptyMessage.style.display = 'block';
+                return;
+            } else {
+                emptyMessage.style.display = 'none';
+            }
+
+            filteredOrders.forEach((order) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="order-id">${order.id}</td>
+                    <td>
+                        <div class="customer-info">
+                            <span class="customer-name">${order.customerName}</span>
+                            <span class="customer-contact">${order.contact}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="product-preview-cell">
+                            <img src="${order.productImage}" alt="${order.productName}" class="order-product-img" onerror="this.src='https://via.placeholder.com/55?text=MYRVS'">
+                            <div>
+                                <strong style="font-size: 16px; color: #081429;">${order.productName}</strong>
+                                <div class="item-details">
+                                    <span class="item-badge">${order.productCategory}</span>
+                                    <span style="font-size: 12px; color: #718096; margin-left: 6px;">Date: ${order.date}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="font-weight: 700; color: #173f64;">${order.productPrice}</td>
+                    <td>
+                        <span class="status-badge ${getBadgeClass(order.status)}">${order.status}</span>
+                    </td>
+                    <td>
+                        <select class="status-select" onchange="changeOrderStatus('${order.id}', this.value)">
+                            <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
+                            <option value="Completed" ${order.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                            <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                        </select>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Update Order Status Logic
+        window.changeOrderStatus = function(orderId, newStatus) {
+            let orders = getOrders();
+            const orderIndex = orders.findIndex(o => o.id === orderId);
+
+            if (orderIndex !== -1) {
+                orders[orderIndex].status = newStatus;
+                saveOrders(orders);
+                renderOrders();
+            }
+        };
+
+        // Filter Event Listeners
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentFilter = e.target.getAttribute('data-filter');
+                renderOrders();
+            });
+        });
+
+        // Collapsible Sidebar Toggle Script
+        document.addEventListener('DOMContentLoaded', () => {
+            renderOrders();
+
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+
+            if (toggleBtn && sidebar) {
+                toggleBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    sidebar.classList.toggle('collapsed');
+                    body.classList.toggle('sidebar-collapsed');
+                });
+
+                document.addEventListener('click', (e) => {
+                    const isClickInsideSidebar = sidebar.contains(e.target);
+                    const isClickOnToggle = toggleBtn.contains(e.target);
+
+                    if (!body.classList.contains('sidebar-collapsed') && !isClickInsideSidebar && !isClickOnToggle) {
+                        sidebar.classList.add('collapsed');
+                        body.classList.add('sidebar-collapsed');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

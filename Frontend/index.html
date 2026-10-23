@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Login & Registration</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
@@ -12,28 +12,31 @@
 <div id="toast"></div>
 
 <div class="container">
+    <!-- LOGIN FORM BOX -->
     <div class="form-box login">
         <form id="loginForm">
             <h1>Login</h1>
-            <div class="input-box">
-                <input type="text" id="loginUser" placeholder="Username">
-                <i class="bx bxs-user"></i>
 
+            <!-- 1 & 2. Email/Username and Password Fields -->
+            <div class="input-box">
+                <input type="text" id="loginUser" placeholder="Username or Email">
+                <i class="bx bxs-user"></i>
             </div>
 
             <div class="input-box">
                 <input type="password" id="loginPass" placeholder="Password">
                 <i class="bx bxs-lock-alt"></i>
-                 <i class="bx bx-hide toggle-password"></i>
-                
+                <i class="bx bx-hide toggle-password"></i>
             </div>
 
             <div class="forgot-link">
                 <a href="#" id="forgotLink">Forgot password?</a>
             </div>
 
+            <!-- 5. Error Message Box -->
             <div id="messageBox" class="message-box"></div>
 
+            <!-- 3. Login Button -->
             <button type="submit" class="btn">Login</button>
             <p>or Login with </p>
 
@@ -46,16 +49,18 @@
         </form>
     </div>
 
+    <!-- REGISTER FORM BOX -->
     <div class="form-box register">
         <form id="registerForm">
             <h1>Registration</h1>
-            <div class='input-box'>
+
+            <div class="input-box">
                 <input type="text" id="regUser" placeholder="Username">
                 <i class="bx bxs-user"></i>
             </div>
 
-            <div class='input-box'>
-                <input type="email" id="regEmail" placeholder="Email">
+            <div class="input-box">
+                <input type="email" id="regEmail" placeholder="Email (use 'seller' in email for seller role)">
                 <i class='bx bxs-envelope'></i>
             </div>
 
@@ -78,6 +83,7 @@
         </form>
     </div>
 
+    <!-- SLIDING TOGGLE PANEL BOX -->
     <div class="toggle-box">
         <div class="toggle-panel toggle-left">
             <h1>Hello, Welcome!!</h1>
@@ -92,6 +98,7 @@
         </div>
     </div>
 </div>
+
 <script src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYRVS - Seller Profile</title>
+    <!-- Import Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #d4e5f5; 
+            position: relative;
+        }
+
+        /* ===== SIDEBAR STYLING & COLLAPSE TRANSITION ===== */
+        .sidebar {
+            width: 300px;
+            background-color: rgb(15, 143, 5); 
+            color: #d4e5f5;
+            padding: 20px 0;
+            box-shadow: 4px 0 10px rgba(79, 217, 11, 0.1);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            flex-shrink: 0;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            padding-left: 0;
+            padding-right: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        /* ===== TOGGLE BUTTON STYLING ===== */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: rgb(15, 143, 5);
+            color: #d4e5f5;
+            border: none;
+            padding: 10px 14px;
+            font-size: 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background-color: #2d6a4f;
+        }
+
+        body:not(.sidebar-collapsed) .sidebar-toggle-btn {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* ===== STORE HEADER ===== */
+        .store-header {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+            padding: 10px 20px 20px 20px;
+            border-bottom: 1px solid rgba(23, 122, 6, 0.15);
+            margin-bottom: 15px;
+            white-space: nowrap;
+        }
+
+        .logo-img {
+            width: 100px; 
+            height: 100px;           
+            object-fit: cover;    
+            border-radius: 50%;
+        }
+
+        .store-name {
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            font-size: 36px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        /* ===== MENU GROUPS & ITEMS ===== */
+        .menu-group {
+            margin-bottom: 20px;
+            white-space: nowrap;
+        }
+
+        .group-title {
+            font-family: Georgia, serif;
+            font-size: 20px;
+            text-transform: uppercase;
+            color: #041a3a; 
+            padding: 10px 20px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            display: block;
+            color: #d8f3dc; 
+            text-decoration: none;
+            padding: 14px 20px;
+            font-size: 22px; 
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .menu-item:hover {
+            background-color: #2d6a4f; 
+            color: #ffffff;
+            padding-left: 25px; 
+        }
+
+        .menu-item.active {
+            background-color: #40916c; 
+            color: #ffffff;
+            font-weight: bold;
+            border-left: 5px solid #74c69d; 
+        }
+
+        .icon {
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        /* ===== MAIN CONTENT AREA ===== */
+        .main-content {
+            flex-grow: 1;
+            padding: 50px 60px;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-bar {
+            margin-bottom: 30px;
+        }
+
+        .catalog-title {
+            font-size: 40px;
+            font-weight: 800;
+            color: #1b4332;
+        }
+
+        .catalog-subtitle {
+            font-size: 18px;
+            color: #4a5568;
+            margin-top: 5px;
+        }
+
+        /* ===== PROFILE CONTAINER LAYOUT ===== */
+        .profile-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 30px;
+        }
+
+        .profile-card {
+            background: #ffffff;
+            padding: 35px 25px;
+            border-radius: 14px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid #c3e2c2;
+            text-align: center;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 20px;
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #0f8f05;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .seller-display-name {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1b4332;
+            margin-bottom: 15px;
+        }
+
+        .badge-verified {
+            background-color: #d1fae5;
+            color: #065f46;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .form-card {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 14px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid #c3e2c2;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-weight: 700;
+            font-size: 18px;
+            color: #2d3748;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 18px;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+
+        input:focus, textarea:focus {
+            border-color: rgb(15, 143, 5);
+        }
+
+        .btn-save {
+            background-color: rgb(15, 143, 5);
+            color: white;
+            border: none;
+            padding: 16px 36px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-save:hover {
+            background-color: #2d6a4f;
+        }
+
+        @media (max-width: 900px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body class="sidebar-collapsed">
+
+    <!-- Toggle Button for Collapsible Sidebar -->
+    <button id="sidebar-toggle" class="sidebar-toggle-btn">&#9776;</button>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar collapsed" id="sidebar">
+        <div class="store-header">
+            <img src="logo.jpg" alt="Store Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/100?text=MYRVS'">
+            <span class="store-name">MYRVS</span>
+        </div>
+        
+        <!-- Navigation Menu -->
+        <div class="menu-group">
+            <div class="group-title">Main Navigation</div>
+            <a href="sellerdashboard.html" class="menu-item"><span class="icon">📊</span> Seller Dashboard</a>
+            <a href="sellerproduct.html" class="menu-item"><span class="icon">📦</span> Manage Product</a>
+            <a href="selleraddproduct.html" class="menu-item"><span class="icon">➕</span> Add Product</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">Management</div>
+            <a href="sellerordersection.html" class="menu-item"><span class="icon">📋</span> Order Section</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">Account</div>
+            <a href="sellerprofile.html" class="menu-item active"><span class="icon">👤</span> Seller Profile</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">System</div>
+            <a href="sellerlogout.html" class="menu-item"><span class="icon">🚪</span> Logout</a>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-content">
+        <div class="header-bar">
+            <h2 class="catalog-title">Seller Profile</h2>
+            <p class="catalog-subtitle">Manage your personal contact information and business credentials.</p>
+        </div>
+
+        <div class="profile-container">
+            <!-- SIDE PROFILE DISPLAY CARD -->
+            <div class="profile-card">
+                <div class="avatar-wrapper">
+                    <img src="logo.jpg" alt="Seller Avatar" class="avatar-img" id="avatarPreview" onerror="this.src='https://via.placeholder.com/130?text=MYRVS'">
+                </div>
+                <div class="seller-display-name" id="cardSellerName">Cylene Myrvs</div>
+                <span class="badge-verified">✓ Verified Boutique Seller</span>
+            </div>
+
+            <!-- PROFILE EDIT FORM CARD -->
+            <div class="form-card">
+                <form id="profileForm">
+                    <div class="form-grid">
+                        <!-- 1. SELLER NAME -->
+                        <div class="form-group">
+                            <label for="sellerName">Seller Name</label>
+                            <input type="text" id="sellerName" placeholder="e.g. Cylene Myrvs" required>
+                        </div>
+
+                        <!-- 2. EMAIL -->
+                        <div class="form-group">
+                            <label for="sellerEmail">Email Address</label>
+                            <input type="email" id="sellerEmail" placeholder="e.g. myrvs.boutique@gmail.com" required>
+                        </div>
+
+                        <!-- 3. CONTACT INFORMATION -->
+                        <div class="form-group full-width">
+                            <label for="sellerPhone">Contact Information (Phone)</label>
+                            <input type="text" id="sellerPhone" placeholder="e.g. +63 917 123 4567" required>
+                        </div>
+
+                        <!-- STORE ADDRESS -->
+                        <div class="form-group full-width">
+                            <label for="storeAddress">Boutique Address / Location</label>
+                            <textarea id="storeAddress" rows="3" placeholder="e.g. Camiling, Tarlac, Philippines"></textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-save">💾 Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC CONNECTED TO LOGIN -->
+    <script>
+        function loadProfile() {
+            // Retrieve active session from login page
+            const activeUserJson = localStorage.getItem("currentUser") || localStorage.getItem("myrvs_active_user");
+            const savedCustomProfile = localStorage.getItem("myrvs_seller_profile");
+
+            // Default fallback profile data
+            let profileData = {
+                sellerName: "Cylene Myrvs",
+                email: "myrvs.boutique@gmail.com",
+                phone: "+63 917 123 4567",
+                address: "Camiling, Tarlac, Philippines"
+            };
+
+            // 1. Extract info from active login session if available
+            if (activeUserJson) {
+                const loggedInUser = JSON.parse(activeUserJson);
+                if (loggedInUser.username) {
+                    profileData.sellerName = loggedInUser.username;
+                }
+                if (loggedInUser.email) {
+                    profileData.email = loggedInUser.email;
+                }
+            }
+
+            // 2. Override with custom saved edits if the user previously updated their profile form
+            if (savedCustomProfile) {
+                const customProfile = JSON.parse(savedCustomProfile);
+                profileData = { ...profileData, ...customProfile };
+            }
+
+            // Populate Form Inputs
+            document.getElementById('sellerName').value = profileData.sellerName || '';
+            document.getElementById('sellerEmail').value = profileData.email || '';
+            document.getElementById('sellerPhone').value = profileData.phone || '';
+            document.getElementById('storeAddress').value = profileData.address || '';
+
+            // Update Side Display Card
+            document.getElementById('cardSellerName').innerText = profileData.sellerName || 'Seller';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProfile();
+
+            // Save Profile Changes
+            document.getElementById('profileForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const updatedProfile = {
+                    sellerName: document.getElementById('sellerName').value.trim(),
+                    email: document.getElementById('sellerEmail').value.trim(),
+                    phone: document.getElementById('sellerPhone').value.trim(),
+                    address: document.getElementById('storeAddress').value.trim()
+                };
+
+                // Save to LocalStorage
+                localStorage.setItem('myrvs_seller_profile', JSON.stringify(updatedProfile));
+                
+                // Also update active session if present
+                const activeUserJson = localStorage.getItem("currentUser");
+                if (activeUserJson) {
+                    let currentUser = JSON.parse(activeUserJson);
+                    currentUser.username = updatedProfile.sellerName;
+                    currentUser.email = updatedProfile.email;
+                    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+                }
+
+                loadProfile();
+                alert('Seller profile updated successfully!');
+            });
+
+            // Collapsible Sidebar Toggle Script
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+
+            if (toggleBtn && sidebar) {
+                toggleBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    sidebar.classList.toggle('collapsed');
+                    body.classList.toggle('sidebar-collapsed');
+                });
+
+                document.addEventListener('click', (e) => {
+                    const isClickInsideSidebar = sidebar.contains(e.target);
+                    const isClickOnToggle = toggleBtn.contains(e.target);
+
+                    if (!body.classList.contains('sidebar-collapsed') && !isClickInsideSidebar && !isClickOnToggle) {
+                        sidebar.classList.add('collapsed');
+                        body.classList.add('sidebar-collapsed');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

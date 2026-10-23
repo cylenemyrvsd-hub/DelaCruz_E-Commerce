@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYRVS - Add / Edit Product</title>
+    <!-- Import Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #d4e5f5; 
+            position: relative;
+        }
+
+        /* ===== SIDEBAR STYLING & TRANSITIONS ===== */
+        .sidebar {
+            width: 300px;
+            background-color: rgb(15, 143, 5); 
+            color: #d4e5f5;
+            padding: 20px 0;
+            box-shadow: 4px 0 10px rgba(79, 217, 11, 0.1);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            flex-shrink: 0;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            padding-left: 0;
+            padding-right: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        /* ===== TOGGLE BUTTON STYLING ===== */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: rgb(15, 143, 5);
+            color: #d4e5f5;
+            border: none;
+            padding: 10px 14px;
+            font-size: 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background-color: #2d6a4f;
+        }
+
+        body:not(.sidebar-collapsed) .sidebar-toggle-btn {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* ===== STORE HEADER ===== */
+        .store-header {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+            padding: 10px 20px 20px 20px;
+            border-bottom: 1px solid rgba(23, 122, 6, 0.15);
+            margin-bottom: 15px;
+            white-space: nowrap;
+        }
+
+        .logo-img {
+            width: 100px; 
+            height: 100px;           
+            object-fit: cover;    
+            border-radius: 50%;
+        }
+
+        /* Store Name using Great Vibes Cursive Font */
+        .store-name {
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            font-size: 42px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        /* ===== MENU GROUPS & ITEMS ===== */
+        .menu-group {
+            margin-bottom: 20px;
+            white-space: nowrap;
+        }
+
+        .group-title {
+            font-family: Georgia, serif;
+            font-size: 20px;
+            text-transform: uppercase;
+            color: #041a3a; 
+            padding: 10px 20px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            display: block;
+            color: #d8f3dc; 
+            text-decoration: none;
+            padding: 14px 20px;
+            font-size: 22px; 
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .menu-item:hover {
+            background-color: #2d6a4f; 
+            color: #ffffff;
+            padding-left: 25px; 
+        }
+
+        .menu-item.active {
+            background-color: #40916c; 
+            color: #ffffff;
+            font-weight: bold;
+            border-left: 5px solid #74c69d; 
+        }
+
+        .icon {
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        /* ===== MAIN FORM CONTAINER ===== */
+        .main-content {
+            flex-grow: 1;
+            padding: 50px 60px;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .form-card {
+            background: #ffffff;
+            padding: 45px;
+            border-radius: 14px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid #c3e2c2;
+        }
+
+        .form-title {
+            font-size: 38px;
+            font-weight: 800;
+            color: #1b4332;
+            margin-bottom: 8px;
+        }
+
+        .form-subtitle {
+            font-size: 18px;
+            color: #4a5568;
+            margin-bottom: 35px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: 700;
+            font-size: 18px;
+            color: #2d3748;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 18px;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+
+        input:focus, select:focus {
+            border-color: rgb(15, 143, 5);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 20px;
+            margin-top: 35px;
+        }
+
+        .btn-submit {
+            background-color: rgb(15, 143, 5);
+            color: white;
+            border: none;
+            padding: 16px 36px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: #2d6a4f;
+        }
+
+        .btn-cancel {
+            background-color: #a0aec0;
+            color: white;
+            text-decoration: none;
+            padding: 16px 36px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 8px;
+            display: inline-block;
+            transition: background-color 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background-color: #718096;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="sidebar-collapsed">
+
+    <!-- Toggle Button for Collapsible Sidebar -->
+    <button id="sidebar-toggle" class="sidebar-toggle-btn">&#9776;</button>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar collapsed" id="sidebar">
+        <div class="store-header">
+            <img src="logo.jpg" alt="Store Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/100?text=MYRVS'">
+            <span class="store-name">MYRVS</span>
+        </div>
+        
+        <!-- Navigation Menu -->
+        <div class="menu-group">
+            <div class="group-title">Main Navigation</div>
+            <a href="sellerdashboard.html" class="menu-item"><span class="icon">📊</span> Seller Dashboard</a>
+            <a href="sellerproduct.html" class="menu-item"><span class="icon">📦</span> Manage Product</a>
+            <a href="selleraddproduct.html" class="menu-item active"><span class="icon">➕</span> Add Product</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">Management</div>
+            <a href="sellerordersection.html" class="menu-item"><span class="icon">📋</span> Order Section</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">Account</div>
+            <a href="sellerprofile.html" class="menu-item"><span class="icon">👤</span> Seller Profile</a>
+        </div>
+        
+        <div class="menu-group">
+            <div class="group-title">System</div>
+            <a href="sellerlogout.html" class="menu-item"><span class="icon">🚪</span> Logout</a>
+        </div>
+    </div>
+
+    <!-- MAIN FORM AREA -->
+    <div class="main-content">
+        <div class="form-card">
+            <h2 class="form-title" id="pageTitle">Add New Product</h2>
+            <p class="form-subtitle" id="pageSubtitle">Fill in the details below to publish a new dress item to your store.</p>
+
+            <form id="productForm">
+                <input type="hidden" id="productId">
+
+                <div class="form-grid">
+                    <!-- PRODUCT NAME -->
+                    <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" id="productName" placeholder="e.g. MARIBELLE" required>
+                    </div>
+
+                    <!-- SKU -->
+                    <div class="form-group">
+                        <label for="productSku">SKU / Item Code</label>
+                        <input type="text" id="productSku" placeholder="e.g. DR-SUN-001" required>
+                    </div>
+
+                    <!-- CATEGORY -->
+                    <div class="form-group">
+                        <label for="productCategory">Category</label>
+                        <select id="productCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="Sunday Dress">Sunday Dress</option>
+                            <option value="Casual Dress">Casual Dress</option>
+                            <option value="Evening Gown">Evening Gown</option>
+                        </select>
+                    </div>
+
+                    <!-- PRICE -->
+                    <div class="form-group">
+                        <label for="productPrice">Price (₱)</label>
+                        <input type="number" id="productPrice" placeholder="e.g. 1200" step="0.01" required>
+                    </div>
+
+                    <!-- STOCK / QUANTITY -->
+                    <div class="form-group">
+                        <label for="productStock">Stock Quantity</label>
+                        <input type="number" id="productStock" placeholder="e.g. 15" required>
+                    </div>
+
+                    <!-- IMAGE FILENAME -->
+                    <div class="form-group">
+                        <label for="productImage">Image Filename</label>
+                        <input type="text" id="productImage" placeholder="e.g. Maribelle.Sunday.jpg" required>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit" id="submitBtn">Save Product</button>
+                    <a href="sellerproduct.html" class="btn-cancel">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript block -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Extract selected product data passed from sellerproduct.html
+            const editDataRaw = localStorage.getItem('edit_product_data');
+
+            if (editDataRaw) {
+                const product = JSON.parse(editDataRaw);
+                
+                // Switch Page Header & Button text
+                document.getElementById('pageTitle').innerText = 'Edit Product';
+                document.getElementById('pageSubtitle').innerText = 'Update the information for this dress product.';
+                document.getElementById('submitBtn').innerText = 'Update Product';
+
+                // Extract & Populate inputs
+                document.getElementById('productId').value = product.id;
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productSku').value = product.sku || '';
+                document.getElementById('productCategory').value = product.category;
+                document.getElementById('productPrice').value = product.price;
+                document.getElementById('productStock').value = product.stock;
+                document.getElementById('productImage').value = product.image;
+            }
+
+            // Save/Update Form Submit Handler
+            document.getElementById('productForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const id = document.getElementById('productId').value || Date.now().toString();
+                const name = document.getElementById('productName').value.trim();
+                const sku = document.getElementById('productSku').value.trim();
+                const category = document.getElementById('productCategory').value;
+                const price = parseFloat(document.getElementById('productPrice').value);
+                const stock = parseInt(document.getElementById('productStock').value);
+                const image = document.getElementById('productImage').value.trim();
+
+                const newProduct = { id, name, sku, category, price, stock, image };
+
+                let products = JSON.parse(localStorage.getItem('myrvs_products')) || [];
+
+                const existingIndex = products.findIndex(p => p.id === id);
+                if (existingIndex > -1) {
+                    products[existingIndex] = newProduct;
+                } else {
+                    products.push(newProduct);
+                }
+
+                localStorage.setItem('myrvs_products', JSON.stringify(products));
+                localStorage.removeItem('edit_product_data');
+
+                alert(existingIndex > -1 ? 'Product updated successfully!' : 'Product added successfully!');
+                window.location.href = 'sellerproduct.html';
+            });
+
+            // Collapsible Sidebar Toggle Script
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                sidebar.classList.toggle('collapsed');
+                body.classList.toggle('sidebar-collapsed');
+            });
+
+            document.addEventListener('click', (e) => {
+                const isClickInsideSidebar = sidebar.contains(e.target);
+                const isClickOnToggle = toggleBtn.contains(e.target);
+
+                if (!body.classList.contains('sidebar-collapsed') && !isClickInsideSidebar && !isClickOnToggle) {
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

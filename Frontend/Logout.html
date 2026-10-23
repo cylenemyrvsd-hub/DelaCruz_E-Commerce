@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Myrvs-Home</title>
+    <title>Myrvs - Logout</title>
     <!-- Import Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
@@ -72,7 +72,6 @@
             background-color: #2d6a4f;
         }
 
-        /* Hides button completely when the sidebar is open */
         body:not(.sidebar-collapsed) .sidebar-toggle-btn {
             opacity: 0;
             visibility: hidden;
@@ -114,7 +113,7 @@
 
         .logo-img {
             width: 120px; 
-            height: 120px;          
+            height: 120px;           
             object-fit: cover;    
             border-radius: 50%;
         }
@@ -189,19 +188,17 @@
             max-width: 750px;
             width: 100%;
             border: 1px solid #cbd5e0;
-            
         }
 
         .welcome-card h1 {
             color: #041a3a;
             font-size: 42px;
             margin-bottom: 12px;
-           
         }
 
         .welcome-card p {
             color: #475569;
-            font-size: 28px;
+            font-size: 18px;
             line-height: 1.6;
             margin-bottom: 15px;
         }
@@ -229,7 +226,7 @@
 
         .announcement-box p {
             color: #15803d;
-            font-size: 28px;
+            font-size: 16px;
             margin: 0;
         }
 
@@ -243,12 +240,12 @@
         .info-box h4 {
             color: #1e40af;
             margin-bottom: 4px;
-            font-size: 28px;
+            font-size: 18px;
         }
 
         .info-box p {
             color: #1d4ed8;
-            font-size: 28px;
+            font-size: 16px;
             margin: 0;
         }
 
@@ -262,12 +259,12 @@
         .tip-box h4 {
             color: #6b21a8;
             margin-bottom: 4px;
-            font-size: 28px;
+            font-size: 18px;
         }
 
         .tip-box p {
             color: #7e22ce;
-            font-size: 28px;
+            font-size: 16px;
             margin: 0;
         }
 
@@ -293,7 +290,7 @@
             max-width: 400px;
             width: 90%;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             animation: fadeIn 0.2s ease-in-out;
         }
 
@@ -305,7 +302,7 @@
 
         .logout-modal-card p {
             color: #475569;
-            font-size: 28px;
+            font-size: 16px;
             margin-bottom: 20px;
         }
 
@@ -362,14 +359,14 @@
     <!-- SIDEBAR -->
     <div class="sidebar collapsed" id="sidebar">
         <div class="store-header">
-            <img src="logo.jpg" alt="Store Logo" class="logo-img">
+            <img src="logo.jpg" alt="Store Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/120?text=MYRVS'">
             <span class="store-name">MYRVS</span>
         </div>
         
         <!-- Main Navigation Group -->
         <div class="menu-group">
             <div class="group-title">Main Navigation</div>
-            <a href="Home.html" class="menu-item active"><span class="icon">🏠</span> Home</a>
+            <a href="Home.html" class="menu-item"><span class="icon">🏠</span> Home</a>
             <a href="Products.html" class="menu-item"><span class="icon">📦</span> Products</a>
             <a href="Categories.html" class="menu-item"><span class="icon">📁</span> Categories</a>
         </div>
@@ -392,34 +389,33 @@
         <!-- System Group -->
         <div class="menu-group">
             <div class="group-title">System</div>
-            <a href="Logout.html" id="logout-trigger" class="menu-item"><span class="icon">🚪</span> Logout</a>
+            <a href="Logout.html" id="logout-trigger" class="menu-item active"><span class="icon">🚪</span> Logout</a>
         </div>
     </div>
 
     <!-- MAIN PAGE CONTENT WITH MULTIPLE MESSAGES -->
     <div class="main-content">
         <div class="welcome-card">
-            <h1>THANK YOU!</h1>
-            <p>We are thrilled to have you here. Explore our wide range of products, check out your shopping cart, and customize your profile preferences anytime through your account settings.</p>
-            <p>Your session is secure, and you can easily manage your orders or navigate through different categories using the collapsible sidebar on the left.</p>
+            <h1>SESSION END</h1>
+            <p>Ready to sign out? You can safely close your customer session below, or continue exploring our boutique catalog.</p>
             
             <div class="messages-container">
                 <!-- Announcement Message -->
                 <div class="announcement-box">
                     <h4>📢 Store Update & Announcements</h4>
-                    <p>New arrivals and special discount promos are now live! Be sure to check your Wishlist and active orders for updates.</p>
+                    <p>New arrivals and special discount promos are now live! Be sure to check your Wishlist when you log back in.</p>
                 </div>
 
                 <!-- Shipping / Service Message -->
                 <div class="info-box">
                     <h4>🚚 Fast & Reliable Delivery Notice</h4>
-                    <p>All standard orders placed before 3:00 PM are processed and shipped out on the same business day with real-time tracking.</p>
+                    <p>All standard orders placed before 3:00 PM are processed and shipped out on the same business day.</p>
                 </div>
 
                 <!-- Customer Support Tip -->
                 <div class="tip-box">
                     <h4>💡 Quick Tip for Your Account</h4>
-                    <p>You can pin your favorite items to your Wishlist for quick access later, or update your delivery preferences in the Settings panel.</p>
+                    <p>Your cart and wishlist items are safely remembered in your browser storage for your next visit.</p>
                 </div>
             </div>
         </div>
@@ -474,7 +470,7 @@
             });
 
             // ==========================================
-            // LOGOUT MODAL & BUTTON FUNCTIONALITY
+            // LOGOUT MODAL & REDIRECT FUNCTIONALITY
             // ==========================================
             const logoutModal = document.getElementById('logoutModal');
             const logoutTrigger = document.getElementById('logout-trigger');
@@ -495,20 +491,30 @@
                     logoutModal.style.display = 'none';
                 });
             }
+
             if (confirmLogoutBtn) {
-            confirmLogoutBtn.addEventListener('click', () => {
-                // Hides the modal and displays the successful logout message screen without a login button
-                document.body.innerHTML = `
-                    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: #d4e5f5; font-family: Arial, sans-serif; text-align: center; padding: 20px;">
-                        <div style="background: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 500px; width: 100%; border: 1px solid #cbd5e0;">
-                            <h1 style="color: #166534; font-size: 32px; margin-bottom: 15px;">Logged Out Successfully!</h1>
-                            <p style="color: #475569; font-size: 16px; line-height: 1.5; margin: 0;">Thank you for visiting MYRVS Store. Your session has been safely closed. You may now close this tab or browser window.</p>
+                confirmLogoutBtn.addEventListener('click', () => {
+                    // Clear active customer session data
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('myrvs_active_user');
+
+                    // Display successful logout message and countdown before redirecting
+                    document.body.innerHTML = `
+                        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: #d4e5f5; font-family: Arial, sans-serif; text-align: center; padding: 20px;">
+                            <div style="background: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 500px; width: 100%; border: 1px solid #cbd5e0;">
+                                <h1 style="color: #166534; font-size: 32px; margin-bottom: 15px;">Logged Out Successfully!</h1>
+                                <p style="color: #475569; font-size: 16px; line-height: 1.5; margin-bottom: 15px;">Thank you for visiting MYRVS Store. Your session has been safely closed.</p>
+                                <p style="color: #0f8f05; font-size: 15px; font-weight: bold;">Redirecting to Login Page in 3 seconds...</p>
+                            </div>
                         </div>
-                    </div>
-                `;
-            });
-        }
-        
+                    `;
+
+                    // Redirect back to login page after 3 seconds
+                    setTimeout(() => {
+                        window.location.href = "index.html"; // Adjust to your login file name if needed (e.g. login.html)
+                    }, 3000);
+                });
+            }
         });
     </script>
 </body>
